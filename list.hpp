@@ -52,9 +52,8 @@ void List<T>::push_back( T data )
   }
   else
   {
-    Node<T>* temp = new Node<T>(data, nullptr);
-    tail->next = temp;
-    tail = temp;
+    tail->next = new Node<T>(data, nullptr);
+    tail = tail->next;
   }
 }
 

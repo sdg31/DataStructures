@@ -3,6 +3,7 @@ class Node
 {
 public:
   Node();
+  Node(T,Node<T>*);
   Node<T>* next;
   T data;
 };
@@ -13,3 +14,8 @@ Node<T>::Node()
 {
 }
 
+template<typename T>
+Node<T>::Node(T d, Node<T>* n)
+  : data(d), next(n)
+{
+}

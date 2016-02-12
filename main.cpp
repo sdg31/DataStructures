@@ -1,18 +1,15 @@
-#include "list.hpp"
-#include <iostream>
+#include "queue.hpp"
 
 int main()
 {
-  List<std::string> L;
-  L.push_front( "5" );
-  L.push_front( "8" );
-  L.push_front( "12" );
-  L.push_front( "15" );
+  Queue<double> q;
+  q.enqueue( 5.4 );
+  q.enqueue( 2.2 );
+  q.enqueue( 12.3 );
+  q.enqueue( 3.14 );
+  q.dequeue();
  
-  std::cout << L.head->data << "\n";
-  std::cout << L.head->next->data << "\n";
-  std::cout << L.head->next->next->data << "\n";
-  std::cout << L.head->next->next->next->data << "\n";
+  q.print();
   
   return 0;
 }

@@ -1,7 +1,14 @@
-#include "queue.hpp"
+#include "libraries/queue.hpp"
+
+#include <queue>
+#include <cstdlib>
+#include <ctime>
+
 
 int main()
 {
+    
+  
   Queue<double> q;
   q.enqueue( 5.4 );
   q.enqueue( 2.2 );

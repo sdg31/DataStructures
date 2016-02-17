@@ -4,7 +4,8 @@ cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 
 #project declarations
 project(full_lib CXX)
-project(queue CXX)
+project(test1 CXX)
+project(test2 CXX)
 
 #add library .cpp files to a GLOB
 file(GLOB full_lib_src
@@ -16,8 +17,10 @@ add_library(full_lib STATIC
     ${full_lib_src}
 )
 
-# main program executable
-add_executable(queue main.cpp)
+# test program executables
+add_executable(test1 tests/test1.cpp)
+add_executable(test2 tests/test2.cpp)
 
 # link libraries
-target_link_libraries(queue LINK_PUBLIC full_lib)
+target_link_libraries(test1 LINK_PUBLIC full_lib)
+target_link_libraries(test2 LINK_PUBLIC full_lib)

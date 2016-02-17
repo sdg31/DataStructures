@@ -16,6 +16,7 @@ private:
     
 public:
     void start();
+    void reset();
     int pause();
     int duration();
     
@@ -26,12 +27,17 @@ inline void StopWatch::start() {
 }
 
 inline int StopWatch::pause() {
-    _duration += Time::now() - _last;
-    return this->duration();
+    Time::duration temp = Time::now() - _last;
+    _duration += temp;
+    return std::chrono::duration_cast<ns>(temp).count();
 }
 
 inline int StopWatch::duration() {
     return std::chrono::duration_cast<ns>(_duration).count();
+}
+
+inline void StopWatch::reset() {
+    _duration = Time::duration::zero();
 }
 
 #endif

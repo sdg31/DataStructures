@@ -71,6 +71,8 @@ for i = 1:length(our_de_dur)
  end
 end
 
+disp('Removing outliers ------------------------------')
+
 figure(1)
 subplot(2,2,3)
 histogram(our_en_dur2);
@@ -78,11 +80,15 @@ ylabel('number of enqueues')
 xlabel('duration (ns)')
 title('our queue enqueue (outliers removed)')
 
+our_en_mean = mean(our_en_dur2)
+
 subplot(2,2,4)
 histogram(our_de_dur2);
 ylabel('number of dequeues')
 xlabel('duration (ns)')
 title('our queue dequeue (outliers removed)')
+
+our_de_mean = mean(our_de_dur2)
 
 % remove outliers
 their_en_dur2 = [];
@@ -111,8 +117,12 @@ ylabel('number of enqueues')
 xlabel('duration (ns)')
 title('their queue enqueue (outliers removed)')
 
+their_en_mean = mean(their_en_dur2)
+
 subplot(2,2,4)
 histogram(their_de_dur2);
 ylabel('number of dequeues')
 xlabel('duration (ns)')
 title('their queue dequeue (outliers removed)')
+
+their_de_mean = mean(their_de_dur2)

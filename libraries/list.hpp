@@ -18,11 +18,12 @@ public:
 public:
   List();
   virtual ~List();
+  void clear( Node<T>* p );
   void push_front( T data );
   void push_back( T data );
   void pop_front();
   void insert();
-  void print();  
+  void print();
 };
 
 //default constructor creates empty list
@@ -35,7 +36,7 @@ List<T>::List()
 //insert a new head into the list
 template<typename T>
 void List<T>::push_front( T data )
-{ 
+{
   //if the list is empty, allocate a new head
   //since there is only one element, the head is also the tail
   if( !head )
@@ -54,7 +55,7 @@ void List<T>::push_front( T data )
 //push_back is fundamentally the same as push_front
 template<typename T>
 void List<T>::push_back( T data )
-{   
+{
   if( !head )
   {
     head = new Node<T>(data, nullptr);
@@ -75,7 +76,7 @@ void List<T>::pop_front()
   //we have made such an error impossible, although this is optional
   if ( !head )
       return;
-  
+
   //if there is only one element (head == tail), then simply delete it
   //and set both pointers to nullptr
   if( head == tail)
@@ -107,12 +108,23 @@ void List<T>::print()
   std::cout << std::endl;
 }
 
+//delete every node in the list starting from the parameter node
+template<typename T>
+void List<T>::clear( Node<T>* p )
+{
+  //iterate through the remainder of the list, deleting each node
+  while( p )
+  {
+    Node<T>* q = p->next;
+    delete p;
+    p = q;
+  }
+}
+
 template<typename T>
 List<T>::~List()
 {
-  //iterate through every element and remove it until nothing is left
-  while( head )
-    this->pop_front();
+  clear( this->head );
 }
 
 #endif

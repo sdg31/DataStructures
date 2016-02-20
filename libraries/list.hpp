@@ -68,30 +68,21 @@ void List<T>::push_back( T data )
   }
 }
 
-//delete the head of the list
+//delete the head
 template<typename T>
 T List<T>::pop_front()
 {
-  //if there is no head, this is a logic error, so assert
+  //if there is no head, there's a logic error, so assert
   assert( head );
 
+  //return the data at the current head
   T return_data = head->data;
 
-  //if there is only one element (head == tail), then simply delete it
-  //and set both pointers to nullptr
-  if( head == tail)
-  {
-    delete head;
-    head = tail = nullptr;
-  }
-  //in all other cases, a temporary node must be created that copies the second node in the list
-  //the head is deleted, and temp (the second node in the list), is made into the head
-  else
-  {
-    Node<T>* temp = head->next;
-    delete head;
-    head = temp;
-  }
+  //create a temporary to the second element in the list
+  //if there is nothing, this will be nullptr, making the list empty again
+  Node<T>* temp = head->next;
+  delete head;
+  head = temp;
 
   return return_data;
 }

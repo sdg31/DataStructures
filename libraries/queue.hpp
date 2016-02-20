@@ -11,9 +11,10 @@ public:
   void enqueue( T data );
   void dequeue();
   void print();
+  T getData() const;
 };
 
-//to enqueue calls push_back, since 
+//to enqueue calls push_back, since
 //an enqueue always happens at the back of the queue
 template<typename T>
 void Queue<T>::enqueue( T data )
@@ -35,4 +36,9 @@ void Queue<T>::print()
   List<T>::print();
 }
 
+template<typename T>
+T Queue<T>::getData() const
+{
+  return this->head->data;
+}
 #endif

@@ -1,3 +1,5 @@
+//Node has two constructors, a default which creates an empty list,
+//and one with two parameters, one for data and the other for the next element
 template<typename T>
 class Node
 {

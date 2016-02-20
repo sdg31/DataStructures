@@ -1,3 +1,6 @@
+#ifndef NODE_HPP
+#define NODE_HPP
+
 //Node has two constructors, a default which creates an empty list,
 //and one with two parameters, one for data and the other for the next element
 template<typename T>
@@ -21,3 +24,5 @@ Node<T>::Node(T d, Node<T>* n)
   : data(d), next(n)
 {
 }
+
+#endif

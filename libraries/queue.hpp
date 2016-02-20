@@ -9,7 +9,7 @@ class Queue : List<T>
 {
 public:
   void enqueue( T data );
-  void dequeue();
+  T dequeue();
   void print();
   T getData() const;
 };
@@ -25,9 +25,9 @@ void Queue<T>::enqueue( T data )
 //dequeue calls pop_front, since
 //dequeues always happen at the head
 template<typename T>
-void Queue<T>::dequeue()
+T Queue<T>::dequeue()
 {
-  this->pop_front();
+  return this->pop_front();
 }
 
 template<typename T>

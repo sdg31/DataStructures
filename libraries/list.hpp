@@ -2,8 +2,8 @@
 #define LIST_HPP
 
 #include "node.hpp"
-
 #include <iostream>
+#include <cassert>
 
 //this singly linked list has two named nodes, a head and tail
 //these are not dummy nodes and both contain data
@@ -21,7 +21,7 @@ public:
   void clear( Node<T>* p );
   void push_front( T data );
   void push_back( T data );
-  void pop_front();
+  T pop_front();
   void insert();
   void print();
 };
@@ -70,12 +70,12 @@ void List<T>::push_back( T data )
 
 //delete the head of the list
 template<typename T>
-void List<T>::pop_front()
+T List<T>::pop_front()
 {
-  //if there is no head, this is a logic error
-  //we have made such an error impossible, although this is optional
-  if ( !head )
-      return;
+  //if there is no head, this is a logic error, so assert
+  assert( head );
+
+  T return_data = head->data;
 
   //if there is only one element (head == tail), then simply delete it
   //and set both pointers to nullptr
@@ -92,6 +92,8 @@ void List<T>::pop_front()
     delete head;
     head = temp;
   }
+
+  return return_data;
 }
 
 //prints the contents of every node in the list

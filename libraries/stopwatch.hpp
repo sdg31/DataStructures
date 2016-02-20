@@ -22,10 +22,12 @@ public:
     
 };
 
+//begin counting time
 inline void StopWatch::start() {
     _last = Time::now();
 }
 
+//stop recording and return the elapsed time
 inline int StopWatch::pause() {
     Time::duration temp = Time::now() - _last;
     _duration += temp;

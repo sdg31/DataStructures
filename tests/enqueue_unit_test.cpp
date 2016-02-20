@@ -10,7 +10,6 @@ int main()
   }
   for( double i = 0; i < 1000000; i++ )
   {
-    assert( Q.getData() == i );
-    Q.dequeue();
+    assert( Q.dequeue() == i );
   }
 }

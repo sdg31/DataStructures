@@ -18,7 +18,7 @@ public:
 public:
   List();
   virtual ~List();
-  void clear( Node<T>* p );
+  void clear( Node<T>* current );
   void push_front( T data );
   void push_back( T data );
   T pop_front();
@@ -103,14 +103,14 @@ void List<T>::print()
 
 //delete every node in the list starting from the parameter node
 template<typename T>
-void List<T>::clear( Node<T>* p )
+void List<T>::clear( Node<T>* current )
 {
   //iterate through the remainder of the list, deleting each node
-  while( p )
+  while( current )
   {
-    Node<T>* q = p->next;
-    delete p;
-    p = q;
+    Node<T>* temp = current->next;
+    delete current;
+    current = temp;
   }
 }
 

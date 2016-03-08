@@ -1,5 +1,4 @@
-// Test 1 is used to compare the time of N enqueues
-// followed by N dequeues on our queue vs the std::queue
+// Test 1
 
 #include "../libraries/huffman.hpp"
 #include "../libraries/stopwatch.hpp"

@@ -1,7 +1,7 @@
 #ifndef MINQUEUE_HPP
 #define MINQUEUE_HPP
 
-#include "node.hpp"
+#include "sortvector.hpp"
 
 #include <queue>
 #include <vector>
@@ -14,6 +14,9 @@ private:
 	std::priority_queue<Node<D, W>*, std::vector<Node<D, W>*>, CompareMin<Node<D, W>*>> _pq;
 
 public:
+	MinQueue(const char* file_name): MinQueue(SortVector<D, W>(file_name)) { }
+	MinQueue(SortVector<D, W> sv): MinQueue(sv.get_vector()) { }
+	MinQueue(std::vector<Leaf<D, W>*> v): _pq(v.begin(), v.end()) { }
 	void add(D, W);
 	void add(Node<D, W>*, Node<D, W>*);
 	Node<D, W>* remove();

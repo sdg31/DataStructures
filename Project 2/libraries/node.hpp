@@ -13,6 +13,7 @@ public:
 	Node() { }
 	Node(W w): _wt(w) { }
 	W weight() { return _wt; }
+	void inc_weight() { _wt++; }
 	virtual bool is_leaf() { return false; }
 };
 

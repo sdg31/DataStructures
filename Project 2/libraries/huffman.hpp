@@ -5,6 +5,10 @@
 
 #include <string>
 
+// forward declaration of Huffman Builder
+template<typename D, typename W>
+class HuffmanBuilder;
+
 // this is the Huffman Tree class
 template<typename D, typename W>
 class HuffmanTree {
@@ -13,6 +17,8 @@ private:
 	std::string get_code(Node<D, W>*, D d, std::string code);
 
 public:
+	HuffmanTree(const char* file_name): HuffmanTree(HuffmanBuilder<D, W>(file_name)) { }
+	HuffmanTree(HuffmanBuilder<D, W> hb): HuffmanTree(hb.create()) { }
 	HuffmanTree(Node<D, W>* r): _root(r) { }
 	std::string get_code(D d);
 };
@@ -54,15 +60,16 @@ private:
 	MinQueue<D, W> _nodes;
 
 public:
+	HuffmanBuilder(const char* file_name): _nodes(MinQueue<D, W>(file_name)) { }
 	void add(D d, W w) { _nodes.add(d, w); }
 	void add(Node<D, W>* l, Node<D, W>* r) { _nodes.add(l, r); }
-	HuffmanTree<D, W>* create();
+	Node<D, W>* create();
 };
 
 // This function creates a Huffman Tree
 // from all of the nodes that have been added
 template<typename D, typename W>
-HuffmanTree<D, W>* HuffmanBuilder<D, W>::create() {
+Node<D, W>* HuffmanBuilder<D, W>::create() {
 	// while there is more than one node left in the queue
 	// keep paring the lowest two and adding that back into
 	// the queue
@@ -70,7 +77,7 @@ HuffmanTree<D, W>* HuffmanBuilder<D, W>::create() {
 		_nodes.add(_nodes.remove(), _nodes.remove());
 	}
 
-	return new HuffmanTree<D, W>(_nodes.remove());
+	return _nodes.remove();
 }
 
 

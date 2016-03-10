@@ -9,7 +9,9 @@ int main()
 { 
     HuffmanTree<char, int> ht("../inputs/file1.txt");
 
-    std::cout << ht.get_code('!') << std::endl;
+    std::cout << ht.get_code('T') << std::endl;
+
+    ht.encode("../inputs/file1.txt", "../inputs/file2.txt");
 
 	return 0;
 }

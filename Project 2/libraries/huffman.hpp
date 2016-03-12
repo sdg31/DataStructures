@@ -2,12 +2,7 @@
 #define HUFFMAN_HPP
 
 #include "minqueue.hpp"
-
-#include <string>
-#include <iostream>
-
-// character to terminate huffman file
-const char END_HUFF = 0xFF;
+#include "iohelper.hpp"
 
 // forward declaration of Huffman Builder
 template<typename D, typename W>
@@ -22,7 +17,8 @@ private:
 	int height(Node<D, W>*);
 	void write_code(std::ofstream&, D, bool = false);
 	D find_item(Node<D, W>*, const std::string&, int);
-	std::string char_as_binary_string(char);
+	std::string as_binary_string(char);
+	std::string as_binary_string(std::string);
 
 public:
 	HuffmanTree(const char* file_name): HuffmanTree(HuffmanBuilder<D, W>(file_name)) { }
@@ -51,11 +47,11 @@ void HuffmanTree<D, W>::encode(const char* in_file_name, const char* out_file_na
 
 	// encode all original characters
 	while (!in_file.eof()) {
-		write_code(out_file, in_file.get());
+		write_code(out_file, get(in_file, new D()));
 	}
 
 	// wirte a character to signify the end of the text
-	write_code(out_file, END_HUFF, true);
+	write_code(out_file, get_terminator(new D()), true);
 
 	in_file.close();
 	out_file.close();
@@ -75,13 +71,13 @@ void HuffmanTree<D, W>::decode(const char* in_file_name, const char* out_file_na
 
 	while (!in_file.eof()) {
 		while (code.length() < max_code)
-			code += char_as_binary_string(in_file.get());
+			code += as_binary_string(get(in_file, new D()));
 
 		item = find_item(_root, code, 0);
 		code = code.substr(get_code(item).length(), code.length());
-		if (item == END_HUFF)
+		if (item == get_terminator(new D()))
 			break;
-		out_file.put(item);
+		out_file << item;
 	}
 
 	in_file.close();
@@ -125,7 +121,7 @@ D HuffmanTree<D, W>::find_item(Node<D, W>* n, const std::string& code, int depth
 
 // writes the code of the character to the passed in output file
 template<typename D, typename W>
-std::string HuffmanTree<D, W>::char_as_binary_string(char buffer) {
+std::string HuffmanTree<D, W>::as_binary_string(char buffer) {
 	int buff_pos = 7;
 	std::string code;
 	char mask = 1;
@@ -142,6 +138,18 @@ std::string HuffmanTree<D, W>::char_as_binary_string(char buffer) {
 	}
 	
 	return code;
+}
+
+// writes the code of the string to the passed in output file
+template<typename D, typename W>
+std::string HuffmanTree<D, W>::as_binary_string(std::string wrd) {
+	std::string bstring;
+
+	for (int i = 0 ; i < wrd.length(); i++) {
+		bstring += as_binary_string(wrd[i]);
+	}
+
+	return bstring;
 }
 
 // recursively searches for a key and returns it's code
@@ -198,7 +206,7 @@ private:
 	MinQueue<D, W> _nodes;
 
 public:
-	HuffmanBuilder(const char* file_name): _nodes(MinQueue<D, W>(file_name)) { _nodes.add(END_HUFF,1); }
+	HuffmanBuilder(const char* file_name): _nodes(MinQueue<D, W>(file_name)) { _nodes.add(get_terminator(new D()),1); }
 	void add(D d, W w) { _nodes.add(d, w); }
 	void add(Node<D, W>* l, Node<D, W>* r) { _nodes.add(l, r); }
 	Node<D, W>* create();

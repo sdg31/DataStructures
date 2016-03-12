@@ -2,9 +2,9 @@
 #define SORTVECTOR_HPP
 
 #include "node.hpp"
+#include "iohelper.hpp"
 
 #include <vector>
-#include <fstream>
 
 // this is a vector that maintains a
 // sorted order for faster searches
@@ -35,7 +35,7 @@ SortVector<D, W>::SortVector(const char* file_name) {
 
 	ifile.open(file_name);
 	while(!ifile.eof())
-		insert(ifile.get());
+		insert(get(ifile, new D()));
 
 	ifile.close();
 }

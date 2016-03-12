@@ -7,7 +7,7 @@
 #include <chrono>
 
 typedef std::chrono::high_resolution_clock Time;
-typedef std::chrono::nanoseconds ns;
+typedef std::chrono::milliseconds ms; 
 
 class StopWatch {
 private:
@@ -31,11 +31,11 @@ inline void StopWatch::start() {
 inline int StopWatch::pause() {
     Time::duration temp = Time::now() - _last;
     _duration += temp;
-    return std::chrono::duration_cast<ns>(temp).count();
+    return std::chrono::duration_cast<ms>(temp).count();
 }
 
 inline int StopWatch::duration() {
-    return std::chrono::duration_cast<ns>(_duration).count();
+    return std::chrono::duration_cast<ms>(_duration).count();
 }
 
 inline void StopWatch::reset() {

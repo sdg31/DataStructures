@@ -3,26 +3,33 @@
 #include "../libraries/huffman.hpp"
 #include "../libraries/stopwatch.hpp"
 
+#include <iostream>
+
 int main()
 { 
 	StopWatch sw;
+	const char* infile = "../inputs/bible.txt";
+	const char* enfile = "../inputs/huff_bible.txt";
+	const char* defile = "../inputs/bible2.txt";
 
-	std::cout << "Creating Huffman Tree ... ";
+	std::cout << "Creating HuffmanTree<char> ... ";
 	sw.start();
 
-    HuffmanTree<char, int> ht("../inputs/bible.txt");
+    HuffmanTree<char, int> ht(infile);
 
-    std::cout << "(" << sw.pause() << ")" << std::endl << " Encoding File ... ";
+    int height = ht.height();
+
+    std::cout << "(" << sw.pause() << " ms) height: " << height << std::endl << "Encoding File ... ";
     sw.start();
 
-    ht.encode("../inputs/bible.txt", "../inputs/huff_bible.txt");
+    ht.encode(infile, enfile);
 
-    std::cout << "(" << sw.pause() << ")" << std::endl << " Decoding File ... ";
+    std::cout << "(" << sw.pause() << " ms)" << std::endl << "Decoding File ... ";
     sw.start();
 
-    ht.decode("../inputs/huff_bible.txt", "../inputs/bible2.txt");
+    ht.decode(enfile, defile);
 
-    std::cout << "(" << sw.pause() << ")" << std::endl << " Complete" << std::endl;
+    std::cout << "(" << sw.pause() << " ms)" << std::endl << "Complete..." << std::endl;
 
 	return 0;
 }

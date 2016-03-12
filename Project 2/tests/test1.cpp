@@ -3,15 +3,26 @@
 #include "../libraries/huffman.hpp"
 #include "../libraries/stopwatch.hpp"
 
-#include <iostream>
-
 int main()
 { 
-    HuffmanTree<char, int> ht("../inputs/file1.txt");
+	StopWatch sw;
 
-    ht.encode("../inputs/file1.txt", "../inputs/file2.txt");
+	std::cout << "Creating Huffman Tree ... ";
+	sw.start();
 
-    ht.decode("../inputs/file2.txt", "../inputs/file3.txt");
+    HuffmanTree<char, int> ht("../inputs/bible.txt");
+
+    std::cout << "(" << sw.pause() << ")" << std::endl << " Encoding File ... ";
+    sw.start();
+
+    ht.encode("../inputs/bible.txt", "../inputs/huff_bible.txt");
+
+    std::cout << "(" << sw.pause() << ")" << std::endl << " Decoding File ... ";
+    sw.start();
+
+    ht.decode("../inputs/huff_bible.txt", "../inputs/bible2.txt");
+
+    std::cout << "(" << sw.pause() << ")" << std::endl << " Complete" << std::endl;
 
 	return 0;
 }

@@ -16,10 +16,10 @@ class HuffmanTree {
 private:
 	Node<D, W>* _root;
 	std::map<D, std::string> _map;
-	std::string get_code_rec(Node<D, W>*, D d, std::string code);
+	std::string get_code_rec(Node<D, W>*, D, std::string = "");
 	int height(Node<D, W>*);
 	void write_code(std::ofstream&, D, bool = false);
-	D find_item(Node<D, W>*, const std::string&, int);
+	D find_item(Node<D, W>*, std::string&, int);
 	std::string as_binary_string(char);
 	std::string as_binary_string(std::string);
 	void map_codes(Node<D, W>*, std::string);
@@ -28,18 +28,11 @@ public:
 	HuffmanTree(const char* file_name): HuffmanTree(HuffmanBuilder<D, W>(file_name)) { }
 	HuffmanTree(HuffmanBuilder<D, W> hb): HuffmanTree(hb.create()) { }
 	HuffmanTree(Node<D, W>* r): _root(r) { map_codes(r, ""); }
-	std::string get_code_rec(D d);
 	std::string get_code(D d);
 	void encode(const char*, const char*);
 	void decode(const char*, const char*);
 	int height();
 };
-
-// recursively searches for a key and returns it's code
-template<typename D, typename W>
-std::string HuffmanTree<D, W>::get_code_rec(D d) {
-	return get_code_rec(_root, d, "");
-}
 
 // recursively searches for a key and returns it's code
 template<typename D, typename W>
@@ -125,7 +118,6 @@ void HuffmanTree<D, W>::decode(const char* in_file_name, const char* out_file_na
 			code += as_binary_string(get(in_file, new D()));
 
 		item = find_item(_root, code, 0);
-		code = code.substr(get_code(item).length(), code.length());
 		if (item == get_terminator(new D()))
 			break;
 		out_file << item;
@@ -158,8 +150,9 @@ void HuffmanTree<D, W>::write_code(std::ofstream& out_file, D i, bool end) {
 
 // writes the code of the character to the passed in output file
 template<typename D, typename W>
-D HuffmanTree<D, W>::find_item(Node<D, W>* n, const std::string& code, int depth) {
+D HuffmanTree<D, W>::find_item(Node<D, W>* n, std::string& code, int depth) {
 	if (n->is_leaf()) {
+		code = code.substr(depth, code.length());
 		return dynamic_cast<Leaf<D, W>*>(n)->data();
 	} else {
 		Internal<D, W>* temp_node = dynamic_cast<Internal<D, W>*>(n);

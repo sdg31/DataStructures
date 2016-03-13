@@ -22,12 +22,12 @@ int main()
 
     int height = ht.height();
 
-    std::cout << "(" << sw.pause() << " ms) height: " << height << std::endl << "Encoding File ... ";
+    std::cout << "(" << sw.pause() << " ms) height: " << height << std::endl << "Encoding File " << file << ".txt ... ";
     sw.start();
 
     ht.encode(infile.c_str(), enfile.c_str());
 
-    std::cout << "(" << sw.pause() << " ms)" << std::endl << "Decoding File ... ";
+    std::cout << "(" << sw.pause() << " ms)" << std::endl << "Decoding File " << file << "_char.txt ... ";
     sw.start();
 
     ht.decode(enfile.c_str(), defile.c_str());

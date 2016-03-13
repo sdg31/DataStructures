@@ -4,6 +4,8 @@
 #include "minqueue.hpp"
 #include "iohelper.hpp"
 
+#include <map>
+
 // forward declaration of Huffman Builder
 template<typename D, typename W>
 class HuffmanBuilder;
@@ -13,17 +15,20 @@ template<typename D, typename W>
 class HuffmanTree {
 private:
 	Node<D, W>* _root;
-	std::string get_code(Node<D, W>*, D d, std::string code);
+	std::map<D, std::string> _map;
+	std::string get_code_rec(Node<D, W>*, D d, std::string code);
 	int height(Node<D, W>*);
 	void write_code(std::ofstream&, D, bool = false);
 	D find_item(Node<D, W>*, const std::string&, int);
 	std::string as_binary_string(char);
 	std::string as_binary_string(std::string);
+	void map_codes(Node<D, W>*, std::string);
 
 public:
 	HuffmanTree(const char* file_name): HuffmanTree(HuffmanBuilder<D, W>(file_name)) { }
 	HuffmanTree(HuffmanBuilder<D, W> hb): HuffmanTree(hb.create()) { }
-	HuffmanTree(Node<D, W>* r): _root(r) { }
+	HuffmanTree(Node<D, W>* r): _root(r) { map_codes(r, ""); }
+	std::string get_code_rec(D d);
 	std::string get_code(D d);
 	void encode(const char*, const char*);
 	void decode(const char*, const char*);
@@ -32,8 +37,54 @@ public:
 
 // recursively searches for a key and returns it's code
 template<typename D, typename W>
+std::string HuffmanTree<D, W>::get_code_rec(D d) {
+	return get_code_rec(_root, d, "");
+}
+
+// recursively searches for a key and returns it's code
+template<typename D, typename W>
+std::string HuffmanTree<D, W>::get_code_rec(Node<D, W>* n, D d, std::string code) {
+	// on a leaf node return either a code or empty if no code
+	if (n->is_leaf()) {
+		if (dynamic_cast<Leaf<D, W>*>(n)->data() == d)
+			return code;
+		else
+			return "";
+	}
+	// on an internal node search the sides and return 
+	else {
+		Internal<D, W>* temp_node = dynamic_cast<Internal<D, W>*>(n);
+		std::string temp_code;
+
+		temp_code = get_code_rec(temp_node->left(), d, code+"0");
+		if (!temp_code.empty())
+			return temp_code;
+		else
+			return get_code_rec(temp_node->right(), d, code+"1");
+	}
+}
+
+// recursively searches for a key and returns it's code
+template<typename D, typename W>
 std::string HuffmanTree<D, W>::get_code(D d) {
-	return get_code(_root, d, "");
+	return _map.find(d)->second;
+}
+
+// recursively searches for a key and adds it's code to the map
+template<typename D, typename W>
+void HuffmanTree<D, W>::map_codes(Node<D, W>* n, std::string code) {
+	// on a leaf node return either a code or empty if no code
+	if (n->is_leaf()) {
+		D d = dynamic_cast<Leaf<D, W>*>(n)->data();
+		_map.insert(std::pair<D, std::string>(d, code));
+	}
+	// on an internal node search the sides and return 
+	else {
+		Internal<D, W>* temp_node = dynamic_cast<Internal<D, W>*>(n);
+
+		map_codes(temp_node->left(), code+"0");
+		map_codes(temp_node->right(), code+"1");
+	}
 }
 
 // writes a file using it's coding tree
@@ -152,29 +203,6 @@ std::string HuffmanTree<D, W>::as_binary_string(std::string wrd) {
 	return bstring;
 }
 
-// recursively searches for a key and returns it's code
-template<typename D, typename W>
-std::string HuffmanTree<D, W>::get_code(Node<D, W>* n, D d, std::string code) {
-	// on a leaf node return either a code or empty if no code
-	if (n->is_leaf()) {
-		if (dynamic_cast<Leaf<D, W>*>(n)->data() == d)
-			return code;
-		else
-			return "";
-	}
-	// on an internal node search the sides and return 
-	else {
-		Internal<D, W>* temp_node = dynamic_cast<Internal<D, W>*>(n);
-		std::string temp_code;
-
-		temp_code = get_code(temp_node->left(), d, code+"0");
-		if (!temp_code.empty())
-			return temp_code;
-		else
-			return get_code(temp_node->right(), d, code+"1");
-	}
-}
-
 // recursively find the height of the tree
 template<typename D, typename W>
 int HuffmanTree<D, W>::height() {
@@ -225,6 +253,5 @@ Node<D, W>* HuffmanBuilder<D, W>::create() {
 
 	return _nodes.remove();
 }
-
 
 #endif

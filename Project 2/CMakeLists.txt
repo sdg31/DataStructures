@@ -16,9 +16,16 @@ add_library(full_lib STATIC
     ${full_lib_src}
 )
 
+include_directories(
+	libraries
+)
+
 # test program executables
 add_executable(test1 tests/test1.cpp)
+# test program executables
+add_executable(test2 tests/test2.cpp)
 
 # link libraries
 target_link_libraries(test1 LINK_PUBLIC full_lib)
+target_link_libraries(test2 LINK_PUBLIC full_lib)
 

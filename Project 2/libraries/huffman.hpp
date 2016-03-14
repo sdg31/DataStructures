@@ -140,9 +140,11 @@ void HuffmanTree<D, W>::write_code(std::ofstream& out_file, D i, bool end) {
 		if (code[i] == '1')
 			buffer++;
 
-		if (buff_pos == 7 || (end && i == code.length()-1)) {
+		if (buff_pos == 7) {
 			out_file.put(buffer);
 			buff_pos = 0;
+		} else if (end && i == code.length()-1) {
+			out_file.put(buffer << (8-buff_pos));
 		} else
 			buff_pos++;
 	}

@@ -1,6 +1,13 @@
 #include "insertion_sort.hpp"
-#include <vector>
 
+//TODO: implement the strange offset seen in the book and ODSA
+//that starts with an offset > 1/2. I didn't really get it and didn't implement it.
+
+//shellsort divides the list into a sublist of two, starting at 0 plus some offset
+//(the offset begins at n/2), and sorts array[x] and array[x+offset] until x+offset
+//goes beyond the bounds of the array. The offset is then divided in two, thus
+//increasing the size of the sublist. 
+//once the offset reaches 1, the array is sorted by insertion sort.
 template<typename T>
 void shell_sort( std::vector<T> &array )
 {

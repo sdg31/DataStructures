@@ -40,7 +40,7 @@ void shell_sort_log_2( std::vector<T> &array )
         int capacity = array.size();
 	int offset_power = log2( capacity ) - 1;
 	int offset = pow( 2, offset_power );
-	while( offset_power > 1 )
+	while( offset_power > 0 )
 	{
 	        offset = pow( 2, offset_power );    
 		for( int i = 0; i < capacity; i++ )
@@ -51,7 +51,7 @@ void shell_sort_log_2( std::vector<T> &array )
 					swap( array[i], array[i+offset] );
 			}
 		}
-		offset_power -= 1;
+		--offset_power;
 	}
 	insertion_sort( array );
 }

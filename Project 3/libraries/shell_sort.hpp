@@ -69,7 +69,7 @@ int clog2( int x )
 template<typename T>
 void shell_sort_clog2( std::vector<T> &array )
 {
-        int capacity = array.size();
+    int capacity = array.size();
 	int offset_power = clog2<int>( capacity );
 	int offset = pow( 2, offset_power );
 	while( offset_power > 0 )

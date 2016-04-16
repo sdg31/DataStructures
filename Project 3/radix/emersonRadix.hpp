@@ -6,26 +6,6 @@
 
 // modified current implementations to work with template vectors
 template <typename T>
-void emersonSort(std::vector<T> v) {
-	//initialize values and find the maximum value of the ipnut array
-	//to know how many decimal places to sort
-	T max = v[0];
-	for(int i = 0; i < v.size(); i++){
-		if(max < v[i])
-			max = v[i];
-	}
-	
-	//Do the work of sorting on each digit
-	//First the one's place
-	//Then two's place
-	//Then three's place and so on until the maximum digit is reached
-	for(int digit = 1; max/digit > 0; digit = digit * 10){
-		countingSort(v, digit);
-	}
-}
-
-// modified current implementations to work with template vectors
-template <typename T>
 void countingSort(std::vector<T>& v, int digit) {
 	//initalize an array to store the counts of each number in the input array
 	int count[10] = {0};
@@ -62,14 +42,22 @@ void countingSort(std::vector<T>& v, int digit) {
 
 // modified current implementations to work with template vectors
 template <typename T>
-void print(std::vector<T> v) {
-	std::cout << std::endl;
-
-	for(int i = 0; i < v.size(); i++) {
-		std::cout << v[i] << "  ";
+void emersonSort(std::vector<T>& v) {
+	//initialize values and find the maximum value of the ipnut array
+	//to know how many decimal places to sort
+	T max = v[0];
+	for(int i = 0; i < v.size(); i++){
+		if(max < v[i])
+			max = v[i];
 	}
 	
-	std::cout << std::endl;
+	//Do the work of sorting on each digit
+	//First the one's place
+	//Then two's place
+	//Then three's place and so on until the maximum digit is reached
+	for(int digit = 1; max/digit > 0; digit = digit * 10){
+		countingSort(v, digit);
+	}
 }
 
 #endif

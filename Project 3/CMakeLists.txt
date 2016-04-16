@@ -13,8 +13,8 @@ add_subdirectory(
 #project declarations
 #project(shell_lib CXX)
 project(test_driver CXX)
+project(validate_sorts CXX)
 project(test1 CXX)
-project(test2 CXX)
 
 #add shell library .cpp files to a GLOB
 #file(GLOB shell_lib_src
@@ -35,10 +35,10 @@ include_directories(
 
 # test program executables
 add_executable(test_driver tests/test_driver.cpp)
+add_executable(validate_sorts tests/validate_sorts.cpp)
 add_executable(test1 tests/test1.cpp)
-add_executable(test2 tests/test2.cpp)
 
 # link libraries
 #target_link_libraries(test_driver LINK_PUBLIC shell_lib)
+#target_link_libraries(validate_sorts LINK_PUBLIC shell_lib bubble_lib radix_lib)
 #target_link_libraries(test1 LINK_PUBLIC shell_lib)
-#target_link_libraries(test2 LINK_PUBLIC shell_lib bubble_lib radix_lib)

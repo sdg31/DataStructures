@@ -30,6 +30,7 @@ include_directories(
 	libraries
 	bubble
 	radix
+	insertion
 )
 
 # test program executables

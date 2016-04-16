@@ -4,6 +4,7 @@
 
 // other group's code
 #include "emersonRadix.hpp"
+#include "InsertionSort.hpp"
 #include "bubble.hpp"
 
 #include <iostream>

@@ -1,10 +1,12 @@
 #ifndef INSERTIONSORT_H_INCLUDED
 #define INSERTIONSORT_H_INCLUDED
 
-template<typename Comparable>
-void InsertionSort(Comparable A[], int numberOfElements)
+#include <vector>
+
+template<typename T>
+void InsertionSort(std::vector<T>& A)
 {
-  for (int i = 1; i < numberOfElements; i++)
+  for (int i = 1; i < A.size(); i++)
   {
     for (int j = i; j > 0 && A[j] < A[j-1]; --j)
     {

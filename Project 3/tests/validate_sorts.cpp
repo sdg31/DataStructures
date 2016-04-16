@@ -1,7 +1,6 @@
 // our code
 #include "shell_sort.hpp"
 #include "stopwatch.hpp"
-#include "utils.hpp"
 
 // other group's code
 #include "bubble.hpp"
@@ -17,13 +16,17 @@ int main()
 {
 	srand(time(0)); // seed random numbe
 
-	int n = 1000;
+	int n = 10000;
 
 	std::vector<int> shell(n);
 
-	// intialize a vector
+	// intialize a vector to random values
 	for (int i=0; i < n; i++)
 		shell[i] = rand();
+
+	// verify that the original array is unsorted
+	if (!std::is_sorted(shell.begin(), shell.end()))
+		std::cout << "Original vector confirmed unsorted" << std::endl << std::endl;
 
 	// copy to other vectors
 	std::vector<int> bubble(shell.begin(), shell.end());

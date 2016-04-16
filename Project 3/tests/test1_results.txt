@@ -1,3 +1,9 @@
-n/2 shellsort took 30939 ms
-log2 shellsort took 31287 ms
-clog2 shellsort took 29426 ms
+sorting 100,000 random records (all three sorts sorted the same records)
+
+decrementing offset power by 1:
+
+n/2 shellsort took 31189 ms
+log2 shellsort took 31322 ms
+clog2 shellsort took 31492 ms
+
+by 2:

@@ -36,7 +36,7 @@ int main()
     std::cout << "log2 shellsort took " << log2_sw.pause() << " ms\n";
 
     clog2_sw.start();
-    shell_sort_log_2( test3 );
+    shell_sort_clog2( test3 );
     std::cout << "clog2 shellsort took " << clog2_sw.pause() << " ms\n";
 
 }

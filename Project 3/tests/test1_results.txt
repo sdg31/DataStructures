@@ -1,0 +1,3 @@
+n/2 shellsort took 30939 ms
+log2 shellsort took 31287 ms
+clog2 shellsort took 29426 ms

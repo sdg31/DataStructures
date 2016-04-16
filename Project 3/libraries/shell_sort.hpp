@@ -1,3 +1,6 @@
+#ifndef SHELL_SORT_HPP
+#define SHELL_SORT_HPP
+
 #include "insertion_sort.hpp"
 #include <cmath>
 #include <iostream>
@@ -88,3 +91,4 @@ void shell_sort_clog2( std::vector<T> &array )
 	insertion_sort( array );
 }
 
+#endif

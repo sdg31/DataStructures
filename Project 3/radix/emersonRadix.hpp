@@ -1,3 +1,6 @@
+#ifndef EMERSONRADIX_HPP
+#define EMERSONRADIX_HPP
+
 #include <iostream>
 #include <vector>
 
@@ -30,7 +33,7 @@ void countingSort(std::vector<T>& v, int digit) {
 
 
 	//fill the count array with the number of each element in input array 
-	T temp = 0;
+	int temp = 0;
 	for(int i = 0; i < v.size(); i++) {
 		temp = (v[i]/digit) % 10;
 		count[temp]++;
@@ -69,3 +72,4 @@ void print(std::vector<T> v) {
 	std::cout << std::endl;
 }
 
+#endif

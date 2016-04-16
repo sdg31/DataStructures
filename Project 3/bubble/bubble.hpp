@@ -1,5 +1,8 @@
-#include<algorithm>
-#include<iostream>
+#ifndef BUBBLE_HPP
+#define BUBBLE_HPP
+
+#include <algorithm>
+#include <iostream>
 
 //Performs a bubble sort of the elements betweent first and last
 //First and last must be random access iterators supporting ++, --, and *
@@ -50,3 +53,5 @@ void bubblesort_with_count(It first, It last)
   std::cerr<<"swaps = " << swaps<<'\n';
   std::cerr<<"comps = " << comps<<'\n';
 }
+
+#endif

@@ -1,6 +1,6 @@
 # Bubble Sort
 
-This code was made available by the following people:
+This code has been adapted from code made available by the following people:
 
 * [Ratcliffe,Russell W](rwr21@zips.uakron.edu)
 * [Collins,Frank J](fjc4@zips.uakron.edu)

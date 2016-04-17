@@ -31,7 +31,7 @@ int main()
 	// vectors to hold execution times
 	int shell_times[num_tests];
 	int bubble_times[num_tests];
-	int radix_times[num_tests];
+	//int radix_times[num_tests];
 	int insertion_times[num_tests];
 
 	std::cout << "Testing " << num_tests << " loops of sorting " << vector_size << " values:" << std::endl;
@@ -53,46 +53,35 @@ int main()
 
 		// copy to other vectors
 		std::vector<int> bubble(shell.begin(), shell.end());
-		std::vector<int> radix(shell.begin(), shell.end());
+		//std::vector<int> radix(shell.begin(), shell.end());
 		std::vector<int> insertion(shell.begin(), shell.end());
 
 		// test shell
-		//print(shell);
 		sw.start();
-		shell_sort(shell);
+		shellsort(shell);
 		shell_times[i] = sw.pause();
-		//print(shell);
 
 		// test bubble
-		//print(bubble);
 		sw.start();
 		bubblesort(bubble.begin(), bubble.end());
 		bubble_times[i] = sw.pause();
-		//print(bubble);
 
 		// test radix
-		//print(radix);
-		sw.start();
-		emersonSort(radix);
-		radix_times[i] = sw.pause();
-		//print(radix);
+		// sw.start();
+		// emersonSort(radix);
+		// radix_times[i] = sw.pause();
 
 		// test insertion
-		//print(insertion);
 		sw.start();
 		InsertionSort(insertion);
 		insertion_times[i] = sw.pause();
-		//print(insertion);
-
-		//std::cout << std::endl;
-
 	}
 
 	std::cout << "\r100%" << std::flush << std::endl << std::endl;
 
 	print("shell", shell_times, num_tests);
 	print("bubble", bubble_times, num_tests);
-	print("radix", radix_times, num_tests);
+	//print("radix", radix_times, num_tests);
 	print("insertion", insertion_times, num_tests);
 
 	std::cout << std::endl;
@@ -107,12 +96,4 @@ void print(const char* name, int a[], int size) {
 		std::cout << a[i] << " ";
 
 	std::cout << "];" << std::endl;
-}
-
-template <typename T>
-void print(std::vector<T> v) {
-	for (int i=0; i < v.size(); i++)
-		std::cout << v[i] << " ";
-
-	std::cout << std::endl;
 }

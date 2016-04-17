@@ -37,7 +37,7 @@ int main()
 	std::vector<int> insertion(shell.begin(), shell.end());
 
 	// test shell
-	shell_sort_clog2(shell);
+	shellsort(shell);
 	if (!std::is_sorted(shell.begin(), shell.end()))
 		std::cout << "Shell sort FAIL" << std::endl;
 	else

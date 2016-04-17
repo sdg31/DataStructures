@@ -45,7 +45,7 @@ int main()
 
 		// intialize a vector to random values
 		for (int i=0; i < vector_size; i++)
-			shell[i] = rand()%20;
+			shell[i] = rand();
 
 		// verify that the original array is unsorted
 		if (std::is_sorted(shell.begin(), shell.end()))

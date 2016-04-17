@@ -1,6 +1,6 @@
 # Insertion Sort
 
-This code has been adapted from this [repository](https://github.com/ermerryman/insertion) to work with a template vector.  The original code was made available by the following people:
+This code has been adapted from this [repository](https://github.com/ermerryman/insertion).  The original code was made available by the following people:
 
 * [Abraham,George R](gra3@zips.uakron.edu)
 * [Kretz,Keith W](kwk19@zips.uakron.edu)

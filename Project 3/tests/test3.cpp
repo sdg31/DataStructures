@@ -25,9 +25,8 @@ int main()
 	srand(time(0)); // seed random number
 
 	// intialize variables
-	int num_tests = 5;
-	int vector_size = 10;
-	int mul_fact = 10;
+	int num_tests = 100;
+	int max_vector_size = 10000;
 
 	// vectors to hold execution times
 	int shell_times[num_tests];
@@ -35,11 +34,11 @@ int main()
 	//int radix_times[num_tests];
 	int insertion_times[num_tests];
 
-	int temp = vector_size;
-	for (int i=0; i < num_tests; i++)
-		temp *= mul_fact;
+	// find amount to increment each loop
+	int increment = max_vector_size / num_tests;
+	int vector_size = increment;
 
-	std::cout << "Testing " << num_tests << " loops of sorting " << vector_size << " - " << temp << " values:" << std::endl;
+	std::cout << "Testing " << num_tests << " loops of sorting " << vector_size << " - " << (num_tests * increment) << " values:" << std::endl;
 
 	for (int i=0; i < num_tests; i++) {
 
@@ -81,7 +80,7 @@ int main()
 		InsertionSort(insertion);
 		insertion_times[i] = sw.pause();
 
-		vector_size *= mul_fact;
+		vector_size += increment;
 	}
 
 	std::cout << "\r100%" << std::flush << std::endl << std::endl;

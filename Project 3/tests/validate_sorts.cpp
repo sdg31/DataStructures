@@ -9,6 +9,8 @@
 #include "bubble.hpp"
 #include "emersonRadix.hpp"
 #include "InsertionSort.hpp"
+#include "merge.hpp"
+#include "HeapNorm.hpp"
 
 #include <iostream>
 #include <vector>
@@ -35,6 +37,8 @@ int main()
 	std::vector<int> bubble(shell.begin(), shell.end());
 	std::vector<int> radix(shell.begin(), shell.end());
 	std::vector<int> insertion(shell.begin(), shell.end());
+	std::vector<int> merge(shell.begin(), shell.end());
+	HeapNorm<int> heap(shell);
 
 	// test bubble
 	bubblesort(bubble.begin(), bubble.end());
@@ -63,6 +67,22 @@ int main()
 		std::cout << "Insertion sort FAIL" << std::endl;
 	else
 		std::cout << "Insertion sort PASS" << std::endl;
+
+	// test merge
+	MergeSort(merge, 0, merge.size());
+	if (!std::is_sorted(merge.begin(), merge.end()) || !std::equal(merge.begin(), merge.end(), bubble.begin()))
+		std::cout << "Merge sort FAIL" << std::endl;
+	else
+		std::cout << "Merge sort PASS" << std::endl;
+
+	// test heap
+	heap.buildHeap();
+	heap.sort();
+	std::vector<int> vheap = heap.getvector();
+	if (!std::is_sorted(vheap.begin(), vheap.end()) || !std::equal(vheap.begin(), vheap.end(), bubble.begin()))
+		std::cout << "Heap sort FAIL" << std::endl;
+	else
+		std::cout << "Heap sort PASS" << std::endl;
 
 	return 0;
 }

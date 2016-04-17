@@ -31,7 +31,6 @@ int main()
 	// vectors to hold execution times
 	int shell_times[num_tests];
 	int bubble_times[num_tests];
-	//int radix_times[num_tests];
 	int insertion_times[num_tests];
 
 	std::cout << "Testing " << num_tests << " loops of sorting " << vector_size << " values:" << std::endl;
@@ -53,7 +52,6 @@ int main()
 
 		// copy to other vectors
 		std::vector<int> bubble(shell.begin(), shell.end());
-		//std::vector<int> radix(shell.begin(), shell.end());
 		std::vector<int> insertion(shell.begin(), shell.end());
 
 		// test shell
@@ -66,11 +64,6 @@ int main()
 		bubblesort(bubble.begin(), bubble.end());
 		bubble_times[i] = sw.pause();
 
-		// test radix
-		// sw.start();
-		// emersonSort(radix);
-		// radix_times[i] = sw.pause();
-
 		// test insertion
 		sw.start();
 		InsertionSort(insertion);
@@ -81,7 +74,6 @@ int main()
 
 	print("shell", shell_times, num_tests);
 	print("bubble", bubble_times, num_tests);
-	//print("radix", radix_times, num_tests);
 	print("insertion", insertion_times, num_tests);
 
 	std::cout << std::endl;

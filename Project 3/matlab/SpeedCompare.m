@@ -37,3 +37,14 @@ histogram(bubble);
 histogram(insertion);
 title('Comparison');
 legend('shell', 'bubble', 'insertion');
+
+
+shell = [0 0 0 3 62 ];
+bubble = [0 0 6 550 56960 ];
+insertion = [0 0 2 247 25194 ];
+
+x = [10 100 1000 10000 100000];
+figure(5);
+plot(x, shell, x, bubble, x, insertion);
+title('Comparison');
+legend('shell', 'bubble', 'insertion');

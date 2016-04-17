@@ -5,9 +5,10 @@ cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 #project declarations
 #project(test_driver CXX)
 #project(test1 CXX)
+#project(radix CXX)
 project(validate_sorts CXX)
 project(test2 CXX)
-project(radix CXX)
+project(test3 CXX)
 
 include_directories(
 	libraries
@@ -19,6 +20,7 @@ include_directories(
 # test program executables
 #add_executable(test_driver tests/test_driver.cpp)
 #add_executable(test1 tests/test1.cpp)
+#add_executable(radix tests/radix.cpp)
 add_executable(validate_sorts tests/validate_sorts.cpp)
 add_executable(test2 tests/test2.cpp)
-add_executable(radix tests/radix.cpp)
+add_executable(test3 tests/test3.cpp)

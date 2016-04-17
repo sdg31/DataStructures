@@ -1,3 +1,6 @@
+// This test is used to verify that all of the
+// sort algorithms are working correctly
+
 // our code
 #include "shell_sort.hpp"
 #include "stopwatch.hpp"

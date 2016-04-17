@@ -3,18 +3,22 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wno-write-strings")
 cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 
 # add other group code
-add_subdirectory(
-	bubble
-)
-add_subdirectory(
-	radix
-)
+#add_subdirectory(
+#	bubble
+#)
+#add_subdirectory(
+#	radix
+#)
+#add_subdirectory(
+#	insertion
+#)
 
 #project declarations
 #project(shell_lib CXX)
 project(test_driver CXX)
 project(validate_sorts CXX)
 project(test1 CXX)
+project(test2 CXX)
 
 #add shell library .cpp files to a GLOB
 #file(GLOB shell_lib_src
@@ -37,6 +41,7 @@ include_directories(
 add_executable(test_driver tests/test_driver.cpp)
 add_executable(validate_sorts tests/validate_sorts.cpp)
 add_executable(test1 tests/test1.cpp)
+add_executable(test2 tests/test2.cpp)
 
 # link libraries
 #target_link_libraries(test_driver LINK_PUBLIC shell_lib)

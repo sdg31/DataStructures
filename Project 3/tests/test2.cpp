@@ -25,7 +25,7 @@ int main()
 	srand(time(0)); // seed random number
 
 	// intialize variables
-	int num_tests = 10;
+	int num_tests = 100;
 	int vector_size = 10000;
 
 	// vectors to hold execution times

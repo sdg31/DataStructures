@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 #project(test1 CXX)
 project(validate_sorts CXX)
 project(test2 CXX)
+project(radix CXX)
 
 include_directories(
 	libraries
@@ -20,3 +21,4 @@ include_directories(
 #add_executable(test1 tests/test1.cpp)
 add_executable(validate_sorts tests/validate_sorts.cpp)
 add_executable(test2 tests/test2.cpp)
+add_executable(radix tests/radix.cpp)

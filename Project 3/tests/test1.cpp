@@ -28,15 +28,6 @@ int main()
     std::cout <<  __builtin_clz( test2.size() ) << '\n';
 
     shell_sw.start();
-    shell_sort( test1 );
-    std::cout << "n/2 shellsort took " << shell_sw.pause() << " ms\n";
-
-    log2_sw.start();
-    shell_sort_log_2( test2 );
-    std::cout << "log2 shellsort took " << log2_sw.pause() << " ms\n";
-
-    clog2_sw.start();
-    shell_sort_clog2( test3 );
-    std::cout << "clog2 shellsort took " << clog2_sw.pause() << " ms\n";
-
+    shellsort( test1 );
+    std::cout << "n/2 shellsort took " << shell_sw.pause() << " ns\n";
 }

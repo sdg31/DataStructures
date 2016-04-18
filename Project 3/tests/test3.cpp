@@ -32,6 +32,7 @@ int main()
 	int shell_times[num_tests];
 	int bubble_times[num_tests];
 	int insertion_times[num_tests];
+	int standard_times[num_tests];
 
 	// find amount to increment each loop
 	int increment = max_vector_size / num_tests;
@@ -57,6 +58,7 @@ int main()
 		// copy to other vectors
 		std::vector<int> bubble(shell.begin(), shell.end());
 		std::vector<int> insertion(shell.begin(), shell.end());
+		std::vector<int> standard(shell.begin(), shell.end());
 
 		// test shell
 		sw.start();
@@ -73,6 +75,11 @@ int main()
 		InsertionSort(insertion);
 		insertion_times[i] = sw.pause();
 
+		// test standard
+		sw.start();
+		std::sort(standard.begin(), standard.end());
+		standard_times[i] = sw.pause();
+
 		vector_size += increment;
 	}
 
@@ -81,6 +88,7 @@ int main()
 	print("shell", shell_times, num_tests);
 	print("bubble", bubble_times, num_tests);
 	print("insertion", insertion_times, num_tests);
+	print("standard", standard_times, num_tests);
 
 	std::cout << std::endl;
 

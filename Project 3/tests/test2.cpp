@@ -32,6 +32,7 @@ int main()
 	int shell_times[num_tests];
 	int bubble_times[num_tests];
 	int insertion_times[num_tests];
+	int standard_times[num_tests];
 
 	std::cout << "Testing " << num_tests << " loops of sorting " << vector_size << " values:" << std::endl;
 
@@ -53,6 +54,7 @@ int main()
 		// copy to other vectors
 		std::vector<int> bubble(shell.begin(), shell.end());
 		std::vector<int> insertion(shell.begin(), shell.end());
+		std::vector<int> standard(shell.begin(), shell.end());
 
 		// test shell
 		sw.start();
@@ -68,6 +70,11 @@ int main()
 		sw.start();
 		InsertionSort(insertion);
 		insertion_times[i] = sw.pause();
+
+		// test standard
+		sw.start();
+		std::sort(standard.begin(), standard.end());
+		standard_times[i] = sw.pause();
 	}
 
 	std::cout << "\r100%" << std::flush << std::endl << std::endl;
@@ -75,6 +82,7 @@ int main()
 	print("shell", shell_times, num_tests);
 	print("bubble", bubble_times, num_tests);
 	print("insertion", insertion_times, num_tests);
+	print("standard", standard_times, num_tests);
 
 	std::cout << std::endl;
 

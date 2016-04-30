@@ -9,6 +9,8 @@ class twochoice
 public:
 	int hash1( int key );
 	int hash2( int key );
+private:
+	int TableSize;
 }
 
 #endif

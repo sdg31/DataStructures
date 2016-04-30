@@ -13,6 +13,8 @@ public:
 	int hash2( int key );
 
 	void insert( int key );
+	int search( int key );
+	void remove( int key );
 
 	struct item
 	{

@@ -51,3 +51,34 @@ void twochoice::insert( int key )
 		ItemsInBucket[h2]++;
 	}
 }
+
+int twochoice::search( int key )
+{
+	int h1 = hash1( key );
+	int h2 = hash2( key );
+
+	// find the appropriate buckets
+	int b1 = h1*10;
+	int b2 = h2*10;
+
+	// first search with the first hash function
+	for( int i = 0; i < ItemsInBucket[h1]; i++ )
+	{
+		if( Table[b1 + i] == key )
+			return( b1 + i );
+	}
+	// if nothing is found, use the second
+	for( int i = 0; i < ItemsInBucket[h2]; i++ )
+	{
+		if( Table[b2 + i] == key )
+			return( b2 + i );
+	}
+
+}
+
+//tombstone is -1 for the time being
+void twochoice::remove( int key )
+{
+	int position = search( key );
+	Table[position] = -1;
+}

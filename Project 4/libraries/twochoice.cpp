@@ -1,4 +1,5 @@
 #include "twochoice.hpp"
+#include <iostream>
 
 // for speed purposes, you might as well
 // initialize a bit of space in each vector
@@ -7,8 +8,14 @@
 // not a bucket)
 twochoice::twochoice()
 {
-	Table.reserve( 128 );
-	Overflow.reserve( 128 );
+	Table.reserve( 130 );
+	std::vector<int> T( 130 );
+	Table = T;
+	Overflow.reserve( 130 );
+
+	AmountBuckets = Table.size() / 10;
+	std::vector<int> B( AmountBuckets, 0 );
+	ItemsInBucket = B;
 }
 
 // for the time being, these hash functions
@@ -23,4 +30,24 @@ int twochoice::hash1( int key )
 int twochoice::hash2( int key )
 {
 	return key % 7;
+}
+
+void twochoice::insert( int key )
+{
+	int h1 = hash1( key );
+	int h2 = hash2( key );
+
+	item i( key );
+	if( ItemsInBucket[h1] < ItemsInBucket[h2] || ItemsInBucket[h1] == ItemsInBucket[h2] )
+	{
+		i.Bucket = h1;
+		Table[h1*10 + ItemsInBucket[h1]] = i.Data;
+		ItemsInBucket[h1]++;
+	}
+	else
+	{
+		i.Bucket = h2;
+		Table[h2*10 + ItemsInBucket[h2]] = i.Data;
+		ItemsInBucket[h2]++;
+	}
 }

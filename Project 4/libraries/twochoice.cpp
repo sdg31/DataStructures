@@ -7,15 +7,8 @@
 // (overflowing as in running out of space in a vector,
 // not a bucket)
 twochoice::twochoice()
+	:Table( 130, -1 ), AmountBuckets( Table.size() / 10 ), ItemsInBucket( AmountBuckets, 0 ) 
 {
-	Table.reserve( 130 );
-	std::vector<int> T( 130 );
-	Table = T;
-	Overflow.reserve( 130 );
-
-	AmountBuckets = Table.size() / 10;
-	std::vector<int> B( AmountBuckets, 0 );
-	ItemsInBucket = B;
 }
 
 // for the time being, these hash functions
@@ -40,14 +33,23 @@ void twochoice::insert( int key )
 	item i( key );
 	if( ItemsInBucket[h1] < ItemsInBucket[h2] || ItemsInBucket[h1] == ItemsInBucket[h2] )
 	{
+		int position = h1*10 + ItemsInBucket[h1];
 		i.Bucket = h1;
-		Table[h1*10 + ItemsInBucket[h1]] = i.Data;
+
+		//if the position is empty, insert
+		if( Table[position] == -1 )
+			Table[position] = i.Data;
+
 		ItemsInBucket[h1]++;
 	}
 	else
 	{
+		int position = h2*10 + ItemsInBucket[h2];
 		i.Bucket = h2;
-		Table[h2*10 + ItemsInBucket[h2]] = i.Data;
+
+		if( Table[position] == -1 )
+			Table[position] = i.Data;
+
 		ItemsInBucket[h2]++;
 	}
 }
@@ -73,6 +75,8 @@ int twochoice::search( int key )
 		if( Table[b2 + i] == key )
 			return( b2 + i );
 	}
+
+	return -1;
 
 }
 

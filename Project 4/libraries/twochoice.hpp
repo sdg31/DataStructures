@@ -2,6 +2,7 @@
 #define TWOCHOICE_HPP
 
 #include <vector>
+#include <iostream>
 
 // two-choice hashing uses two unrelated hash functions,
 // and puts the result in the bucket that is less full
@@ -33,5 +34,8 @@ public:
 	std::vector<int> ItemsInBucket;
 	int AmountBuckets;
 };
+
+// ostream for hash table contents
+std::ostream& operator<<(std::ostream&, const twochoice&);
 
 #endif

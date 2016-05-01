@@ -38,7 +38,7 @@ public:
 	template <typename K1, typename D1>
 	friend std::ostream& operator<<(std::ostream& os, const twochoice<K1, D1>& h);
 
-//private:
+private:
 	// tombstone variable
 	const Item<K, D>* tombstone;
 	//the main hash table

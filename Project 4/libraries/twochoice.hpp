@@ -24,6 +24,7 @@ class twochoice
 {
 public:
 	twochoice();
+	~twochoice();
 	int hash1( int key );
 	int hash2( int key );
 	int hash1( std::string key );
@@ -208,6 +209,24 @@ void twochoice<K, D>::remove( K key )
 		Overflow[position-Table.size()] = tombstone;
 	else
 		Table[position] = tombstone;
+}
+
+template <typename K, typename D>
+twochoice<K, D>::~twochoice()
+{
+	for( int i = 0; i < Table.size(); i++ )
+	{
+		if( Table[i] != tombstone )
+			delete Table[i];
+	}
+
+	for( int i = 0; i < Overflow.size(); i++ )
+	{
+		if( Overflow[i] != tombstone )
+			delete Overflow[i];
+	}
+
+	delete tombstone;
 }
 
 #endif

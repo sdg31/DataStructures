@@ -38,7 +38,7 @@ public:
 	template <typename K1, typename D1>
 	friend std::ostream& operator<<(std::ostream& os, const twochoice<K1, D1>& h);
 
-private:
+//private:
 	// tombstone variable
 	const Item<K, D>* tombstone;
 	//the main hash table
@@ -77,7 +77,8 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 // not a bucket)
 template <typename K, typename D>
 twochoice<K, D>::twochoice()
-	:tombstone(new Item<K, D>()), Table( 130, tombstone ), AmountBuckets( Table.size() / 10 ), ItemsInBucket(Table.size() / 10, 0 ) 
+	:tombstone(new Item<K, D>()), Table( 130, tombstone ), AmountBuckets( Table.size() / 10 ),
+	 ItemsInBucket(Table.size() / 10, 0 ) 
 {
 }
 
@@ -128,11 +129,16 @@ void twochoice<K, D>::insert( Item<K, D> tempItem )
 	if( ItemsInBucket[h1] <= ItemsInBucket[h2])
 	{
 		int position = h1*10 + ItemsInBucket[h1];
-		
-		//if the position is empty, insert
-		if( Table[position] == tombstone )
-			Table[position] = item;
-
+		if( position < h1*10 + ItemsInBucket[h1] )
+		{
+			//if the position is empty, insert
+			if( Table[position] == tombstone )
+				Table[position] = item;
+		}
+		else
+		{
+			Overflow.push_back( item );
+		}
 
 		ItemsInBucket[h1]++;
 	}
@@ -169,6 +175,14 @@ int twochoice<K, D>::positionSearch( K key )
 		if( Table[b2 + i]->key == key )
 			return(b2 + i);
 	}
+	// otherwise use overflow
+	for( int i = 0; i < Overflow.size(); i++ )
+	{
+		if( Overflow[i] == tombstone )
+			continue;
+		else if( Overflow[i]->key == key )
+			return  Table.size() + i;
+	}
 
 	return -1;
 
@@ -179,16 +193,21 @@ Item<K, D> twochoice<K, D>::search( K key ) {
 	int p = positionSearch(key);
 
 	assert(p != -1);
-
-	return *Table[p];
+	if( p >= Table.size() )
+		return *Overflow[p-Table.size()];
+	else
+		return *Table[p];
 }
 
 //tombstone is -1 for the time being
 template <typename K, typename D>
 void twochoice<K, D>::remove( K key )
 {
-	Item<K, D> position = positionSearch( key );
-	Table[position] = tombstone;
+	int position = positionSearch( key );
+	if( position >= Table.size() )
+		Overflow[position-Table.size()] = tombstone;
+	else
+		Table[position] = tombstone;
 }
 
 #endif

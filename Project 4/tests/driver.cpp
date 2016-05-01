@@ -1,9 +1,9 @@
 #include "twochoice.hpp"
 
 int main() {
-	twochoice h;
-
-	h.insert(3);
-	std::cout << h.search(3) << std::endl << h << std::endl;
-
+	std::cout << "intializing hash table..." << std::endl;
+	twochoice<int, std::string> h;
+	
+	h.insert(Item<int, std::string>(3, "testing"));
+	std::cout << h.search(3) << std::endl;
 }

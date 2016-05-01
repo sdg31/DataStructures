@@ -129,7 +129,7 @@ void twochoice<K, D>::insert( Item<K, D> tempItem )
 	if( ItemsInBucket[h1] <= ItemsInBucket[h2])
 	{
 		int position = h1*10 + ItemsInBucket[h1];
-		if( position < h1*10 + ItemsInBucket[h1] )
+		if( position < h1*10 + 10 )
 		{
 			//if the position is empty, insert
 			if( Table[position] == tombstone )

@@ -40,7 +40,7 @@ public:
 
 private:
 	// tombstone variable
-	const Item<K, D>* tombstone = new Item<K, D>();
+	const Item<K, D>* tombstone;
 	//the main hash table
 	std::vector<const Item<K, D>* > Table;
 	// overflow table, items inserted into a full bucket go here
@@ -77,7 +77,7 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 // not a bucket)
 template <typename K, typename D>
 twochoice<K, D>::twochoice()
-	:Table( 130, tombstone ), AmountBuckets( Table.size() / 10 ), ItemsInBucket(Table.size() / 10, 0 ) 
+	:tombstone(new Item<K, D>()), Table( 130, tombstone ), AmountBuckets( Table.size() / 10 ), ItemsInBucket(Table.size() / 10, 0 ) 
 {
 }
 

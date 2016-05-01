@@ -77,7 +77,7 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 // not a bucket)
 template <typename K, typename D>
 twochoice<K, D>::twochoice()
-	:Table( 130, nullptr ), AmountBuckets( Table.size() / 10 ), ItemsInBucket(AmountBuckets, 0 ) 
+	:Table( 130, tombstone ), AmountBuckets( Table.size() / 10 ), ItemsInBucket(Table.size() / 10, 0 ) 
 {
 }
 
@@ -121,17 +121,18 @@ template <typename K, typename D>
 void twochoice<K, D>::insert( Item<K, D> tempItem )
 {
 	const Item<K, D>* item = new Item<K, D>(tempItem.key, tempItem.data);
-
+	
 	int h1 = hash1( item->key );
 	int h2 = hash2( item->key );
 
 	if( ItemsInBucket[h1] <= ItemsInBucket[h2])
 	{
 		int position = h1*10 + ItemsInBucket[h1];
-
+		
 		//if the position is empty, insert
-		if( Table[position] == tombstone || Table[position] == nullptr )
+		if( Table[position] == tombstone )
 			Table[position] = item;
+
 
 		ItemsInBucket[h1]++;
 	}
@@ -139,7 +140,7 @@ void twochoice<K, D>::insert( Item<K, D> tempItem )
 	{
 		int position = h2*10 + ItemsInBucket[h2];
 
-		if( Table[position] == tombstone || Table[position] == nullptr )
+		if( Table[position] == tombstone )
 			Table[position] = item;
 
 		ItemsInBucket[h2]++;

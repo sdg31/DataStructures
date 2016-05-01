@@ -2,8 +2,10 @@
 
 int main() {
 	std::cout << "intializing hash table..." << std::endl;
-	twochoice<int, std::string> h;
-	
-	h.insert(Item<int, std::string>(3, "testing"));
+	twochoice<int, int> h;
+
+	h.insert(Item<int, int>(3, 9000));
 	std::cout << h.search(3) << std::endl;
+
+	return 0;
 }

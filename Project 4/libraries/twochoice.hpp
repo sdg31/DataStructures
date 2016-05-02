@@ -31,6 +31,7 @@ public:
 	int hash2( std::string key );
 
 	void insert( Item<K, D> item );
+	void insert( K key, D data );
 	int positionSearch( K key );
 	Item<K, D> search( K key );
 	void remove( K key );
@@ -60,13 +61,19 @@ std::ostream& operator<<(std::ostream& os, const Item<K, D>& item) {
 // ostream for hash table contents
 template <typename K, typename D>
 std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
-	for (int i=0; i < h.Table.size(); i++)
-		os << *h.Table[i] << std::endl;
+	for (int i=0; i < h.Table.size(); i++) {
+		if (h.Table[i] != h.tombstone)
+			os << *h.Table[i] << std::endl;
+		else
+			os << "empty" << std::endl;
+	}
 
-	for (int i=0; i < h.Overflow.size(); i++)
-		os << *h.Overflow[i] << std::endl;
-
-	os << std::endl;
+	for (int i=0; i < h.Overflow.size(); i++) {
+		if (h.Overflow[i] != h.tombstone)
+			os << *h.Overflow[i] << std::endl;
+		else
+			os << "empty" << std::endl;
+	}
 
 	return os;
 }
@@ -152,6 +159,12 @@ void twochoice<K, D>::insert( Item<K, D> tempItem )
 
 		ItemsInBucket[h2]++;
 	}
+}
+
+template <typename K, typename D>
+void twochoice<K, D>::insert( K key, D data )
+{
+	insert(Item<K, D>(key, data));
 }
 
 template <typename K, typename D>

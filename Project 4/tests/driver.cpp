@@ -2,10 +2,13 @@
 
 int main() {
 	std::cout << "intializing hash table..." << std::endl;
-	twochoice<int, std::string> h;
+	twochoice<std::string, double> h;
 
-	h.insert(Item<int, std::string>(3, "hello world"));
-	std::cout << h.search(3) << std::endl;
+	h.insert("pi", 3.141592654);
+	std::cout << h.search("pi") << std::endl << std::endl << h  << std::endl;
+
+	h.remove("pi");
+	std::cout << h << std::endl;
 
 	return 0;
 }

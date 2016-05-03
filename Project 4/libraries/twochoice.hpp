@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <math.h>
 
 template <typename K, typename D>
 struct Item
@@ -47,6 +48,8 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const twochoice<K1, D1>& h);
 
 private:
+	const int BucketSize;
+
 	// tombstone variable
 	const Item<K, D>* tombstone;
 	//the main hash table
@@ -95,10 +98,12 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 // not a bucket)
 template <typename K, typename D>
 twochoice<K, D>::twochoice(int size)
-	:tombstone(new Item<K, D>()), Table( size, tombstone ), 
-	AmountBuckets( size / 10 ), ItemsInBucket(size / 10, 0 ),
-	GreatestPrime( greatest_prime_factor(size / 10) )
-{ }
+	:tombstone(new Item<K, D>()), Table( size, tombstone ), BucketSize(round(log2(log2(size)))),
+	AmountBuckets( size / BucketSize ), ItemsInBucket(size / BucketSize, 0 ),
+	GreatestPrime( greatest_prime_factor(size / BucketSize) )
+{ 
+	std::cout << "BucketSize = " << BucketSize << std::endl;
+}
 
 // for the time being, these hash functions
 // return modulo of two different prime numbers
@@ -150,7 +155,7 @@ int twochoice<K, D>::insert( Item<K, D> tempItem )
 	if( ItemsInBucket[h1] <= ItemsInBucket[h2])
 	{
 		// insert if there is room in the bucket
-		if (ItemsInBucket[h1] < 10)
+		if (ItemsInBucket[h1] < BucketSize)
 		{
 			collisions += insertBucket(h1, item);
 		}
@@ -164,7 +169,7 @@ int twochoice<K, D>::insert( Item<K, D> tempItem )
 	else
 	{
 		// insert if there is room in the bucket
-		if (ItemsInBucket[h2] < 10)
+		if (ItemsInBucket[h2] < BucketSize)
 		{
 			collisions += insertBucket(h2, item);
 		}
@@ -187,10 +192,10 @@ int twochoice<K, D>::insert( K key, D data )
 template <typename K, typename D>
 int twochoice<K, D>::insertBucket(int bucket, const Item<K, D>* item) {
 	int collisions = 0;
-	int position = bucket*10;
+	int position = bucket*BucketSize;
 
 	// search through bucket for tombstone
-	for (int p=position; p < position+10; p++)
+	for (int p=position; p < position+BucketSize; p++)
 		if( Table[p] == tombstone ) {
 			Table[p] = item;
 			break;
@@ -228,8 +233,8 @@ int twochoice<K, D>::positionSearch( K key )
 	int h2 = hash2( key );
 
 	// find the appropriate buckets
-	int b1 = h1*10;
-	int b2 = h2*10;
+	int b1 = h1*BucketSize;
+	int b2 = h2*BucketSize;
 
 	// first search with the first hash function
 	for( int i = 0; i < ItemsInBucket[h1]; i++ )
@@ -276,7 +281,7 @@ void twochoice<K, D>::remove( K key )
 		Overflow[position-Table.size()] = tombstone;
 	else {
 		Table[position] = tombstone;
-		ItemsInBucket[position/10]--;
+		ItemsInBucket[position/BucketSize]--;
 	}
 }
 

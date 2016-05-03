@@ -23,18 +23,20 @@ template <typename K, typename D>
 class twochoice
 {
 public:
-	twochoice();
+	twochoice(int);
+	twochoice(): twochoice(130) { }
 	~twochoice();
 	int hash1( int key );
 	int hash2( int key );
 	int hash1( std::string key );
 	int hash2( std::string key );
 
-	void insert( Item<K, D> item );
-	void insert( K key, D data );
+	int insert( Item<K, D> item );
+	int insert( K key, D data );
 	int positionSearch( K key );
 	Item<K, D> search( K key );
 	void remove( K key );
+	int size();
 
 	// ostream for hash table contents
 	template <typename K1, typename D1>
@@ -61,6 +63,7 @@ std::ostream& operator<<(std::ostream& os, const Item<K, D>& item) {
 // ostream for hash table contents
 template <typename K, typename D>
 std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
+	os << "------table------" << std::endl;
 	for (int i=0; i < h.Table.size(); i++) {
 		if (h.Table[i] != h.tombstone)
 			os << *h.Table[i] << std::endl;
@@ -68,6 +71,7 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 			os << "empty" << std::endl;
 	}
 
+	os << "-----overflow----" << std::endl;
 	for (int i=0; i < h.Overflow.size(); i++) {
 		if (h.Overflow[i] != h.tombstone)
 			os << *h.Overflow[i] << std::endl;
@@ -84,10 +88,12 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 // (overflowing as in running out of space in a vector,
 // not a bucket)
 template <typename K, typename D>
-twochoice<K, D>::twochoice()
-	:tombstone(new Item<K, D>()), Table( 130, tombstone ), AmountBuckets( Table.size() / 10 ),
-	 ItemsInBucket(Table.size() / 10, 0 ) 
+twochoice<K, D>::twochoice(int size)
+	:tombstone(new Item<K, D>()), Table( size, tombstone ), 
+	AmountBuckets( size / 10 ), ItemsInBucket(size / 10, 0 ) 
 {
+	// due to our bucket size the table size must be a factor of 10
+	assert(size%10 == 0);
 }
 
 // for the time being, these hash functions
@@ -97,13 +103,13 @@ twochoice<K, D>::twochoice()
 template <typename K, typename D>
 int twochoice<K, D>::hash1( int key )
 {
-	return key % 13;
+	return key % AmountBuckets;
 }
 
 template <typename K, typename D>
 int twochoice<K, D>::hash2( int key )
 {
-	return key % 7;
+	return key % (int)(AmountBuckets*0.75);
 }
 
 template <typename K, typename D>
@@ -127,44 +133,56 @@ int twochoice<K, D>::hash2( std::string key )
 }
 
 template <typename K, typename D>
-void twochoice<K, D>::insert( Item<K, D> tempItem )
+int twochoice<K, D>::insert( Item<K, D> tempItem )
 {
 	const Item<K, D>* item = new Item<K, D>(tempItem.key, tempItem.data);
+
+	int collisions = 0;
 	
 	int h1 = hash1( item->key );
 	int h2 = hash2( item->key );
 
 	if( ItemsInBucket[h1] <= ItemsInBucket[h2])
 	{
-		int position = h1*10 + ItemsInBucket[h1];
-		if( position < h1*10 + 10 )
-		{
-			//if the position is empty, insert
-			if( Table[position] == tombstone )
-				Table[position] = item;
-		}
-		else
-		{
-			Overflow.push_back( item );
-		}
+		if (ItemsInBucket[h1] < 10) {
+			int position = h1*10 + ItemsInBucket[h1];
 
-		ItemsInBucket[h1]++;
+			//if the position is empty, insert
+			if( Table[position] == tombstone ) {
+				collisions += ItemsInBucket[h1];
+				Table[position] = item;
+			}
+
+			ItemsInBucket[h1]++;
+		} else {
+			for (int i=0; i < Overflow.size(); i++)
+				if (Overflow[i] == tombstone)
+					Overflow[i] = item;
+				else
+					collisions++;
+
+			Overflow.push_back(item);
+		}
 	}
 	else
 	{
 		int position = h2*10 + ItemsInBucket[h2];
 
-		if( Table[position] == tombstone )
+		if( Table[position] == tombstone ) {
+			collisions += ItemsInBucket[h2];
 			Table[position] = item;
+		}
 
 		ItemsInBucket[h2]++;
 	}
+
+	return collisions;
 }
 
 template <typename K, typename D>
-void twochoice<K, D>::insert( K key, D data )
+int twochoice<K, D>::insert( K key, D data )
 {
-	insert(Item<K, D>(key, data));
+	return insert(Item<K, D>(key, data));
 }
 
 template <typename K, typename D>
@@ -222,6 +240,12 @@ void twochoice<K, D>::remove( K key )
 		Overflow[position-Table.size()] = tombstone;
 	else
 		Table[position] = tombstone;
+}
+
+template <typename K, typename D>
+int twochoice<K, D>::size( )
+{
+	return Table.size() + Overflow.size();
 }
 
 template <typename K, typename D>

@@ -1,6 +1,8 @@
 #ifndef TWOCHOICE_HPP
 #define TWOCHOICE_HPP
 
+#include <prime.hpp>
+
 #include <vector>
 #include <iostream>
 #include <string>
@@ -54,6 +56,8 @@ private:
 
 	std::vector<int> ItemsInBucket;
 	int AmountBuckets;
+
+	int GreatestPrime;
 };
 
 // ostream for item
@@ -92,11 +96,9 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 template <typename K, typename D>
 twochoice<K, D>::twochoice(int size)
 	:tombstone(new Item<K, D>()), Table( size, tombstone ), 
-	AmountBuckets( size / 10 ), ItemsInBucket(size / 10, 0 ) 
-{
-	// due to our bucket size the table size must be a factor of 10
-	assert(size%10 == 0);
-}
+	AmountBuckets( size / 10 ), ItemsInBucket(size / 10, 0 ),
+	GreatestPrime( greatest_prime_factor(size / 10) )
+{ }
 
 // for the time being, these hash functions
 // return modulo of two different prime numbers
@@ -111,7 +113,7 @@ int twochoice<K, D>::hash1( int key )
 template <typename K, typename D>
 int twochoice<K, D>::hash2( int key )
 {
-	return key % (int)(AmountBuckets*0.75);
+	return key % GreatestPrime;
 }
 
 template <typename K, typename D>

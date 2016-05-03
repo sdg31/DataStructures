@@ -5,7 +5,7 @@ int main() {
 	twochoice<std::string, double> h;
 
 	std::cout << h.insert("pi", 3.141592654) << std::endl;
-	std::cout << h.search("pi") << std::endl << std::endl << h << std::endl << h.size() << std::endl;
+	std::cout << h.search("pi") << std::endl;
 
 	return 0;
 }

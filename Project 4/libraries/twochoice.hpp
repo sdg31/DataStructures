@@ -38,6 +38,8 @@ public:
 	int insert( K key, D data );
 	int linearProbe(int position, const Item<K, D>* item);
 	int positionSearch( K key );
+	int linearPositionSearch( int position, K key );
+	bool is_empty(const Item<K, D>* item);
 	Item<K, D> search( K key );
 	void remove( K key );
 	int size();
@@ -74,18 +76,22 @@ template <typename K, typename D>
 std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 	os << "------table------" << std::endl;
 	for (int i=0; i < h.Table.size(); i++) {
-		if (h.Table[i] != h.tombstone)
-			os << *h.Table[i] << std::endl;
-		else
+		if (h.Table[i] == h.tombstone)
+			os << "tombstone" << std::endl;
+		else if (h.Table[i] == nullptr)
 			os << "empty" << std::endl;
+		else
+			os << *h.Table[i] << std::endl;
 	}
 
 	os << "-----overflow----" << std::endl;
 	for (int i=0; i < h.Overflow.size(); i++) {
-		if (h.Overflow[i] != h.tombstone)
-			os << *h.Overflow[i] << std::endl;
-		else
+		if (h.Overflow[i] == h.tombstone)
+			os << "tombstone" << std::endl;
+		else if (h.Overflow[i] == nullptr)
 			os << "empty" << std::endl;
+		else
+			os << *h.Overflow[i] << std::endl;
 	}
 
 	return os;
@@ -111,7 +117,7 @@ twochoice<K, D>::twochoice(int size)
 	Weight = std::vector<int>( AmountBuckets, 0 );
 
 	// intialize the table
-	Table = std::vector<const Item<K, D>* >( AmountBuckets*BucketSize, tombstone );
+	Table = std::vector<const Item<K, D>* >( AmountBuckets*BucketSize, nullptr );
 
 	// these primes are used for the separate hashes
 	// they contain the greatest primes below
@@ -193,7 +199,7 @@ int twochoice<K, D>::linearProbe(int position, const Item<K, D>* item) {
 	int start = position;
 
 	do {
-		if (Table[position] == tombstone) {
+		if (is_empty(Table[position])) {
 			Table[position] = item;
 			break;
 		} 
@@ -216,35 +222,45 @@ int twochoice<K, D>::positionSearch( K key )
 	int h1 = hash1( key );
 	int h2 = hash2( key );
 
-	if (Weight[h1/BucketSize] <= Weight[h2/BucketSize])
-	{
-		int start = h1;
+	int first, second, result = 0;
 
-		do {
-			if (Table[h1]->key == key)
-				return h1;
-
-			h1 = (h1 + 1) % Table.size();
-		} while (h1 != start);
+	if (Weight[h1/BucketSize] <= Weight[h2/BucketSize]) {
+		first = h1;
+		second = h2;
+	} else {
+		first = h2;
+		second = h1;
 	}
-	else
-	{
-		int start = h2;
 
-		do {
-			if (Table[h2]->key == key)
-				return h2;
+	result = linearPositionSearch(first, key);
 
-			h2 = (h2 + 1) % Table.size();
-		} while (h2 != start);
-	}
+	if (result == -1) // was not found before an empty space
+		result = linearPositionSearch(second, key);
+
+	if (result > -1)
+		return result;
 
 	for (int i=0; i < Overflow.size(); i++)
-		if (Overflow[i]->key == key)
+		if (Overflow[i] != tombstone && Overflow[i]->key == key)
 			return Table.size() + i;
 
 	return -1;
+}
 
+template <typename K, typename D>
+int twochoice<K, D>::linearPositionSearch( int position, K key ) {
+		int start = position;
+
+		do {
+			if (Table[position] == nullptr)
+				return -1;
+			else if (Table[position] != tombstone && Table[position]->key == key)
+				return position;
+
+			position = (position + 1) % Table.size();
+		} while (position != start);
+
+		return -2; // was not found at all
 }
 
 template <typename K, typename D>
@@ -276,17 +292,22 @@ int twochoice<K, D>::size( )
 }
 
 template <typename K, typename D>
+bool twochoice<K, D>::is_empty(const Item<K, D>* item) {
+	return (item == tombstone || item == nullptr);
+}
+
+template <typename K, typename D>
 twochoice<K, D>::~twochoice()
 {
 	for( int i = 0; i < Table.size(); i++ )
 	{
-		if( Table[i] != tombstone )
+		if( !is_empty(Table[i]) )
 			delete Table[i];
 	}
 
 	for( int i = 0; i < Overflow.size(); i++ )
 	{
-		if( Overflow[i] != tombstone )
+		if( !is_empty(Overflow[i]) )
 			delete Overflow[i];
 	}
 

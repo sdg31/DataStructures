@@ -14,7 +14,7 @@ int main() {
 	int lengths[5] = {101, 1009, 10007, 100003, 1000003};
 
 	// for each test length
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 5; i++) {
 		std::cout << "intializing hash table with " << lengths[i] << " elements..." << std::endl;
 		twochoice<int, int> h(lengths[i]);
 		long long int collisions = 0;

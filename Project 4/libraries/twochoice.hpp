@@ -36,8 +36,7 @@ public:
 
 	int insert( Item<K, D> item );
 	int insert( K key, D data );
-	int insertBucket(int bucket, const Item<K, D>* item);
-	int insertOverflow(const Item<K, D>* item);
+	int linearProbe(int position, const Item<K, D>* item);
 	int positionSearch( K key );
 	Item<K, D> search( K key );
 	void remove( K key );
@@ -57,10 +56,11 @@ private:
 	// overflow table, items inserted into a full bucket go here
 	std::vector<const Item<K, D>* > Overflow;
 
-	std::vector<int> ItemsInBucket;
+	std::vector<int> Weight;
 	int AmountBuckets;
 
-	int GreatestPrime;
+	int GP; // greatest prime factor less than half of the size
+	int SGP; // second greatest prime factor less than half of the size
 };
 
 // ostream for item
@@ -98,11 +98,26 @@ std::ostream& operator<<(std::ostream& os, const twochoice<K, D>& h) {
 // not a bucket)
 template <typename K, typename D>
 twochoice<K, D>::twochoice(int size)
-	:tombstone(new Item<K, D>()), Table( size, tombstone ), BucketSize(round(log2(log2(size)))),
-	AmountBuckets( size / BucketSize ), ItemsInBucket(size / BucketSize, 0 ),
-	GreatestPrime( greatest_prime_factor(size / BucketSize) )
+	:tombstone(new Item<K, D>()), BucketSize(round(log2(log2(size))))
 { 
-	std::cout << "BucketSize = " << BucketSize << std::endl;
+	// upgrade to table size divisible by bucket size
+	for (int i = 0; i < BucketSize; i++)
+		if ((size+i) % BucketSize == 0) {
+			AmountBuckets = (size+i) / BucketSize;
+			break;
+		}
+
+	// vector to hold weight of all buckets
+	Weight = std::vector<int>( AmountBuckets, 0 );
+
+	// intialize the table
+	Table = std::vector<const Item<K, D>* >( AmountBuckets*BucketSize, tombstone );
+
+	// these primes are used for the separate hashes
+	// they contain the greatest primes below
+	// half of the array
+	GP = greatest_prime(AmountBuckets*BucketSize / 2);
+	SGP = greatest_prime( GP - 1 );
 }
 
 // for the time being, these hash functions
@@ -112,13 +127,13 @@ twochoice<K, D>::twochoice(int size)
 template <typename K, typename D>
 int twochoice<K, D>::hash1( int key )
 {
-	return key % AmountBuckets;
+	return key % GP;
 }
 
 template <typename K, typename D>
 int twochoice<K, D>::hash2( int key )
 {
-	return AmountBuckets - (key % GreatestPrime);
+	return (Table.size()/2) + (key % SGP);
 }
 
 template <typename K, typename D>
@@ -149,35 +164,18 @@ int twochoice<K, D>::insert( Item<K, D> tempItem )
 	int collisions = 0;
 	
 	int h1 = hash1( item->key );
-	int h2 = hash2( item->key );
+	Weight[h1/BucketSize]++;
 
-	// insert into bucket h1 if less or equal
-	if( ItemsInBucket[h1] <= ItemsInBucket[h2])
+	int h2 = hash2( item->key );
+	Weight[h2/BucketSize]++;
+
+	if (Weight[h1/BucketSize] <= Weight[h2/BucketSize])
 	{
-		// insert if there is room in the bucket
-		if (ItemsInBucket[h1] < BucketSize)
-		{
-			collisions += insertBucket(h1, item);
-		}
-		// otherwise put in overflow
-		else
-		{
-			collisions += insertOverflow(item);
-		}
+		collisions += linearProbe(h1, item);
 	}
-	// insert into h2 if it is less full
-	else
+	else 
 	{
-		// insert if there is room in the bucket
-		if (ItemsInBucket[h2] < BucketSize)
-		{
-			collisions += insertBucket(h2, item);
-		}
-		// otherwise put in overflow
-		else
-		{
-			collisions += insertOverflow(item);
-		}
+		collisions += linearProbe(h2, item);
 	}
 
 	return collisions;
@@ -190,38 +188,24 @@ int twochoice<K, D>::insert( K key, D data )
 }
 
 template <typename K, typename D>
-int twochoice<K, D>::insertBucket(int bucket, const Item<K, D>* item) {
+int twochoice<K, D>::linearProbe(int position, const Item<K, D>* item) {
 	int collisions = 0;
-	int position = bucket*BucketSize;
+	int start = position;
 
-	// search through bucket for tombstone
-	for (int p=position; p < position+BucketSize; p++)
-		if( Table[p] == tombstone ) {
-			Table[p] = item;
+	do {
+		if (Table[position] == tombstone) {
+			Table[position] = item;
 			break;
-		} else {
-			collisions++;
+		} 
+		else {
+			++collisions;
 		}
 
-	ItemsInBucket[bucket]++;
+		position = (position + 1) % Table.size();
+	} while (position != start);
 
-	return collisions;
-}
-
-template <typename K, typename D>
-int twochoice<K, D>::insertOverflow(const Item<K, D>* item) {
-	int collisions = 0;
-
-	// search through overflow for a tombstone
-	for (int i=0; i < Overflow.size(); i++)
-		if (Overflow[i] == tombstone) {
-			Overflow[i] = item;
-			break;
-		} else {
-			collisions++;
-		}
-
-	Overflow.push_back(item);
+	if (position == start && Table[position] != item)
+		Overflow.push_back(item);
 
 	return collisions;
 }
@@ -232,30 +216,32 @@ int twochoice<K, D>::positionSearch( K key )
 	int h1 = hash1( key );
 	int h2 = hash2( key );
 
-	// find the appropriate buckets
-	int b1 = h1*BucketSize;
-	int b2 = h2*BucketSize;
+	if (Weight[h1/BucketSize] <= Weight[h2/BucketSize])
+	{
+		int start = h1;
 
-	// first search with the first hash function
-	for( int i = 0; i < ItemsInBucket[h1]; i++ )
-	{
-		if( Table[b1 + i]->key == key )
-			return(b1 + i);
+		do {
+			if (Table[h1]->key == key)
+				return h1;
+
+			h1 = (h1 + 1) % Table.size();
+		} while (h1 != start);
 	}
-	// if nothing is found, use the second
-	for( int i = 0; i < ItemsInBucket[h2]; i++ )
+	else
 	{
-		if( Table[b2 + i]->key == key )
-			return(b2 + i);
+		int start = h2;
+
+		do {
+			if (Table[h2]->key == key)
+				return h2;
+
+			h2 = (h2 + 1) % Table.size();
+		} while (h2 != start);
 	}
-	// otherwise use overflow
-	for( int i = 0; i < Overflow.size(); i++ )
-	{
-		if( Overflow[i] == tombstone )
-			continue;
-		else if( Overflow[i]->key == key )
-			return  Table.size() + i;
-	}
+
+	for (int i=0; i < Overflow.size(); i++)
+		if (Overflow[i]->key == key)
+			return Table.size() + i;
 
 	return -1;
 
@@ -279,10 +265,8 @@ void twochoice<K, D>::remove( K key )
 	int position = positionSearch( key );
 	if( position >= Table.size() )
 		Overflow[position-Table.size()] = tombstone;
-	else {
+	else
 		Table[position] = tombstone;
-		ItemsInBucket[position/BucketSize]--;
-	}
 }
 
 template <typename K, typename D>

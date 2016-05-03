@@ -15,23 +15,13 @@ inline int is_prime(int x) {
 	}
 }
 
-// uses prime factorization https://en.wikipedia.org/wiki/Prime_factor
-// uses the least prime factor on each step of factorization
-// in order to be left with the greatest prime factor at the end
+// search for next prime lower
 // this is inefficient but we only do it once so it is okay
-inline int greatest_prime_factor(int x) {
+inline int greatest_prime(int x) {
 
 	// while x is not prime
 	while (!is_prime(x)) {
-
-		// find least valued prime x is divisible by
-		for (int divisor = 2; divisor < x; divisor++) {
-			if (is_prime(divisor) && x%divisor == 0) {
-				x /= divisor;
-				break;
-			}
-
-		}
+		x--;
 	}
 
 	return x;

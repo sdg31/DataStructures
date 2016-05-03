@@ -14,18 +14,16 @@ int main() {
 	int lengths[5] = {101, 1009, 10007, 100003, 1000003};
 
 	// for each test length
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 1; i++) {
 		std::cout << "intializing hash table with " << lengths[i] << " elements..." << std::endl;
 		twochoice<int, int> h(lengths[i]);
 		long long int collisions = 0;
 
-		for (int j=0; j < round(0.90*lengths[i]); j++)
+		for (int j=0; j < round(0.50*lengths[i]); j++)
 			collisions += h.insert(data[j], data[j]);
 
 		std::cout << "collisions: " << std::endl;
 		std::cout << collisions << std::endl;
-		std::cout << "overflow size: " << std::endl;
-		std::cout << h.size() - lengths[i] << std::endl;
 	}
 
 	return 0;

@@ -33,6 +33,8 @@ public:
 
 	int insert( Item<K, D> item );
 	int insert( K key, D data );
+	int insertBucket(int bucket, const Item<K, D>* item);
+	int insertOverflow(const Item<K, D>* item);
 	int positionSearch( K key );
 	Item<K, D> search( K key );
 	void remove( K key );
@@ -142,38 +144,33 @@ int twochoice<K, D>::insert( Item<K, D> tempItem )
 	int h1 = hash1( item->key );
 	int h2 = hash2( item->key );
 
+	// insert into bucket h1 if less or equal
 	if( ItemsInBucket[h1] <= ItemsInBucket[h2])
 	{
-		if (ItemsInBucket[h1] < 10) {
-			int position = h1*10 + ItemsInBucket[h1];
-
-			//if the position is empty, insert
-			if( Table[position] == tombstone ) {
-				collisions += ItemsInBucket[h1];
-				Table[position] = item;
-			}
-
-			ItemsInBucket[h1]++;
-		} else {
-			for (int i=0; i < Overflow.size(); i++)
-				if (Overflow[i] == tombstone)
-					Overflow[i] = item;
-				else
-					collisions++;
-
-			Overflow.push_back(item);
+		// insert if there is room in the bucket
+		if (ItemsInBucket[h1] < 10)
+		{
+			collisions += insertBucket(h1, item);
+		}
+		// otherwise put in overflow
+		else
+		{
+			collisions += insertOverflow(item);
 		}
 	}
+	// insert into h2 if it is less full
 	else
 	{
-		int position = h2*10 + ItemsInBucket[h2];
-
-		if( Table[position] == tombstone ) {
-			collisions += ItemsInBucket[h2];
-			Table[position] = item;
+		// insert if there is room in the bucket
+		if (ItemsInBucket[h2] < 10)
+		{
+			collisions += insertBucket(h2, item);
 		}
-
-		ItemsInBucket[h2]++;
+		// otherwise put in overflow
+		else
+		{
+			collisions += insertOverflow(item);
+		}
 	}
 
 	return collisions;
@@ -183,6 +180,43 @@ template <typename K, typename D>
 int twochoice<K, D>::insert( K key, D data )
 {
 	return insert(Item<K, D>(key, data));
+}
+
+template <typename K, typename D>
+int twochoice<K, D>::insertBucket(int bucket, const Item<K, D>* item) {
+	int collisions = 0;
+	int position = bucket*10;
+
+	// search through bucket for tombstone
+	for (int p=position; p < position+10; p++)
+		if( Table[p] == tombstone ) {
+			Table[p] = item;
+			break;
+		} else {
+			collisions++;
+		}
+
+	ItemsInBucket[bucket]++;
+
+	return collisions;
+}
+
+template <typename K, typename D>
+int twochoice<K, D>::insertOverflow(const Item<K, D>* item) {
+	int collisions = 0;
+
+	// search through overflow for a tombstone
+	for (int i=0; i < Overflow.size(); i++)
+		if (Overflow[i] == tombstone) {
+			Overflow[i] = item;
+			break;
+		} else {
+			collisions++;
+		}
+
+	Overflow.push_back(item);
+
+	return collisions;
 }
 
 template <typename K, typename D>
@@ -238,8 +272,10 @@ void twochoice<K, D>::remove( K key )
 	int position = positionSearch( key );
 	if( position >= Table.size() )
 		Overflow[position-Table.size()] = tombstone;
-	else
+	else {
 		Table[position] = tombstone;
+		ItemsInBucket[position/10]--;
+	}
 }
 
 template <typename K, typename D>

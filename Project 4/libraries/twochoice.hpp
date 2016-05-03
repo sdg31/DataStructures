@@ -118,7 +118,7 @@ int twochoice<K, D>::hash1( int key )
 template <typename K, typename D>
 int twochoice<K, D>::hash2( int key )
 {
-	return key % GreatestPrime;
+	return AmountBuckets - (key % GreatestPrime);
 }
 
 template <typename K, typename D>

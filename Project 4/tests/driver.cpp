@@ -1,6 +1,7 @@
 #include "twochoice.hpp"
 
 #include <fstream>
+#include <math.h>
 
 // reads the file given to us by a collaborating group
 void read_test_data(std::vector<int>&);
@@ -10,14 +11,22 @@ int main() {
 	std::vector<int> data(2000000);
 	read_test_data(data);
 
-	std::cout << "intializing hash table..." << std::endl;
-	twochoice<int, int> h(103);
-	int collisions = 0;
+	int lengths[5] = {101, 1009, 10007, 100003, 1000003};
 
-	for (int i=0; i < 93; i++)
-		collisions += h.insert(data[i], data[i]);
+	// for each test length
+	for (int i = 0; i < 5; i++) {
+		std::cout << "intializing hash table with " << lengths[i] << " elements..." << std::endl;
+		twochoice<int, int> h(lengths[i]);
+		long long int collisions = 0;
 
-	std::cout << collisions << " " << h.size() << std::endl;
+		for (int j=0; j < round(0.90*lengths[i]); j++)
+			collisions += h.insert(data[j], data[j]);
+
+		std::cout << "collisions: " << std::endl;
+		std::cout << collisions << std::endl;
+		std::cout << "overflow size: " << std::endl;
+		std::cout << h.size() - lengths[i] << std::endl;
+	}
 
 	return 0;
 }

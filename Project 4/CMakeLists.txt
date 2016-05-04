@@ -18,6 +18,8 @@ project(driver CXX)
 
 include_directories(
 	libraries
+	quadratic
+	double
 )
 
 # test program executables

@@ -3,6 +3,7 @@
 #include "twochoice.hpp"
 #include "hash.hpp"
 #include "HashTable.hpp"
+#include "Cuckoo_Hashing.hpp"
 
 #include <fstream>
 #include <math.h>
@@ -25,6 +26,7 @@ int main() {
 		int c1[9];
 		int c2[9];
 		int c3[9];
+		int c4[9];
 		
 		// show inserting from 10% to 90% load
 		for (int percent = 1; percent < 10; percent++) {
@@ -32,8 +34,10 @@ int main() {
 			twochoice<int, int> h1(lengths[i]);
 			HashTable<int> h2(lengths[i]);
 			dhash::HashTable<int> h3(lengths[i]);
+			Hash h4(lengths[i]);
 
 			int collisions = 0;
+			int cuckoo_collisions = 0;
 
 			// insert to the specified percentage of the table size
 			for (int j=0; j < round(((double)percent/10)*lengths[i]); j++) {
@@ -45,17 +49,22 @@ int main() {
 
 				// double hashing
 				h3.load(data[j]);
+
+				// cuckoo hashing
+				cuckoo_collisions += h4.insert1(data[j]);
 			}
 
 			c1[percent-1] = collisions;
 			c2[percent-1] = h2.initialcollisions + h2.totalprobes;
 			c3[percent-1] = h3.getCollisions();
+			c4[percent-1] = cuckoo_collisions;
 		}
 
 		std::cout << "% collisons from 10% - 90% full, " << lengths[i] << " items" << std::endl;
 		print(c1, 9, "tc" + std::to_string(lengths[i]));
 		print(c2, 9, "q" + std::to_string(lengths[i]));
 		print(c3, 9, "d" + std::to_string(lengths[i]));
+		print(c4, 9, "c" + std::to_string(lengths[i]));
 		std::cout << std::endl;
 	}
 

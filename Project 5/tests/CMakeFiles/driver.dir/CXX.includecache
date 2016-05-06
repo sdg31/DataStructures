@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/class/sdg31/DataStructures/Project 5/libraries/graph.hpp
+initializer_list
+-
+vector
+-
+
+/home/class/sdg31/DataStructures/Project 5/tests/driver.cpp
+../libraries/graph.hpp
+/home/class/sdg31/DataStructures/Project 5/libraries/graph.hpp
+iostream
+-
+

@@ -1,0 +1,11 @@
+#include <vector>
+
+template<typename T>
+class Vertex
+{
+};
+
+template<typename T>
+class Graph
+{
+};

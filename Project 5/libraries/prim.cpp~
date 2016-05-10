@@ -1,0 +1,17 @@
+#include "weighted_graph.hpp"
+#include "minheap.hpp"
+
+template<typename T>
+void Graph<T>::Prim()
+{
+    assert( Adjacent.size() > 0 );
+
+    const int V = Vertices;
+    int parent[V];
+    int keys[V];
+
+    MinHeap<int> heap;
+    heap.push( Adjacent[0][0].first->Key );
+    for( int i = 0; i < 
+    
+}

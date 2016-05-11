@@ -1,0 +1,65 @@
+#include <vector>
+#include <initializer_list>
+#include <iostream>
+
+template<typename T>
+struct Node
+{
+    Node();
+    Node( T data );
+    T Data;
+};
+
+template<typename T>
+class Graph
+{
+    std::vector< std::vector< Node<T> > > Adjacent;
+public:
+    Graph();
+    void AddNode( Node<T> node,
+		  std::initializer_list< Node<T> > adjacencies  );
+    void Print();
+};
+
+template<typename T>
+Node<T>::Node()
+    :Data( T() )
+{
+}
+
+template<typename T>
+Node<T>::Node( T data )
+    :Data( data )
+{
+}
+
+// template<typename T>
+// Node<T>::Node( std::initializer_list<Node> List )
+//     :Adjacent( List )
+// {
+// }
+
+template<typename T>
+void Graph<T>::AddNode( Node<T> node, 
+			std::initializer_list< Node <T> > adjacencies )
+{
+    Adjacent.push_back( std::vector< Node<T> >()  );
+    int position = Adjacent.size() - 1;
+    Adjacent[position][0] = node;
+    Node<T> f;
+    Adjacent[position].push_back( f  );
+}
+
+template<typename T>
+void Graph<T>::Print()
+{
+    for( int i = 0; i < Adjacent.size(); i++ )
+    	for( int j = 0; j < Adjacent[i].size(); j++  )
+    	    std::cout << Adjacent[i][j].Data << std::endl;
+}
+
+template<typename T>
+Graph<T>::Graph()
+    :Adjacent()
+{
+}

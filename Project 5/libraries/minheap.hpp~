@@ -1,0 +1,59 @@
+//min heap, courtesy of codeconnect.wordpress.com
+
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+template<typename T>
+class MinHeap
+{
+    struct comparator
+    {
+	bool operator()(T i, T j)
+	{
+	    return (i > j);
+	}
+    };
+
+    std::priority_queue<T, std::vector<T>, comparator> Heap;
+public:
+    void push( T data  );
+    T pop();
+    bool empty();
+    T top();
+    void print();
+    int size();
+};
+
+template<typename T>
+void MinHeap<T>::push( T data )
+{
+    Heap.push( data );
+}
+
+template<typename T>
+T MinHeap<T>::pop()
+{
+    assert( !Heap.empty() );
+    T value = Heap.top();
+    Heap.pop();
+    return value;
+}
+
+template<typename T>
+bool MinHeap<T>::empty()
+{
+    return Heap.empty();
+}
+
+template<typename T>
+T MinHeap<T>::top()
+{
+    return Heap.top();
+}
+
+template<typename T>
+int MinHeap<T>::size()
+{
+    return Heap.size();
+}

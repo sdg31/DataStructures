@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sam/DataStructures/Project 5/libraries/minheap.hpp
+vector
+-
+queue
+-
+algorithm
+-
+utility
+-
+
+/home/sam/DataStructures/Project 5/libraries/test.cpp
+weighted_graph.hpp
+/home/sam/DataStructures/Project 5/libraries/weighted_graph.hpp
+minheap.hpp
+/home/sam/DataStructures/Project 5/libraries/minheap.hpp
+
+/home/sam/DataStructures/Project 5/libraries/weighted_graph.hpp
+vector
+-
+initializer_list
+-
+iostream
+-
+cstdlib
+-
+ctime
+-
+cassert
+-
+utility
+-
+minheap.hpp
+/home/sam/DataStructures/Project 5/libraries/minheap.hpp
+
